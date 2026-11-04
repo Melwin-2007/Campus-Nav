@@ -1,12 +1,20 @@
 """FastAPI application initialization and routing."""
 
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+from app.api.admin import router as admin_router
+from app.api.categories import router as categories_router
+from app.api.health import router as health_router
+from app.api.locations import router as locations_router
+from app.api.qr import router as qr_router
+from app.api.routes import router as routes_router
 from app.core.config import settings
 from app.db.base_class import Base
 from app.db.session import engine
-from app.api.health import router as health_router
 
 
 @asynccontextmanager
@@ -34,8 +42,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount Health router under /api
+# Static file serving for uploads
+static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+os.makedirs(os.path.join(static_dir, "uploads"), exist_ok=True)
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+# Mount Routers under /api
 app.include_router(health_router, prefix=settings.API_PREFIX)
+app.include_router(routes_router, prefix=settings.API_PREFIX)
+app.include_router(categories_router, prefix=settings.API_PREFIX)
+app.include_router(locations_router, prefix=settings.API_PREFIX)
+app.include_router(qr_router, prefix=settings.API_PREFIX)
+app.include_router(admin_router, prefix=settings.API_PREFIX)
 
 
 @app.get("/", tags=["Root"])

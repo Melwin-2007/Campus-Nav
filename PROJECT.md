@@ -53,8 +53,8 @@ Decoupled full-stack progressive web application for university campus wayfindin
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | Architecture Scaffolding & Database Engine | Backend venv, FastAPI setup, SQLite schema, 14 POIs / 12 Categories / 26 Nodes / 38 Edges seed loader, `/api/health`, root doc specs (PRD, DESIGN, RULES, PROGRESS) | none | PLANNED |
-| M2 | Graph Navigation & Routing Engine | Dijkstra & A* pathfinding, Haversine heuristic, bearing, turn maneuvers, coordinate snapping, accessible routing filter, `POST /api/routes` | M1 | PLANNED |
+| M1 | Architecture Scaffolding & Database Engine | Backend venv, FastAPI setup, SQLite schema, 14 POIs / 12 Categories / 26 Nodes / 38 Edges seed loader, `/api/health`, root doc specs (PRD, DESIGN, RULES, PROGRESS) | none | DONE |
+| M2 | Graph Navigation & Routing Engine | Dijkstra & A* pathfinding, Haversine heuristic, bearing, turn maneuvers, coordinate snapping, accessible routing filter, `POST /api/routes` | M1 | DONE |
 | M3 | REST APIs, Authentication, & QR Services | Public POI/Search/Category endpoints, JWT Admin Auth, Admin CRUD, QR Code PNG & PDF poster generator, Data Health Checker | M1, M2 | PLANNED |
 | M4 | Interactive Map-First Frontend Experience | React + Vite + Tailwind setup, full-screen Leaflet map, custom SVG category markers, debounced search, category chips, bottom sheet, location details, GPS tracker, QR scanner modal | M1, M3 | PLANNED |
 | M5 | Directions UI & Admin Visual Map Graph Editor | Directions drawer, animated route polyline, step-by-step turn cards, zoom-to-maneuver, interactive visual graph editor for nodes/edges on Leaflet canvas | M2, M3, M4 | PLANNED |

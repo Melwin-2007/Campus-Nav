@@ -1,7 +1,8 @@
 """Location Pydantic v2 schemas."""
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field
+from typing import Any
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from app.schemas.category import CategoryOut
 from app.schemas.path_node import PathNodeOut
 
@@ -46,6 +47,17 @@ class LocationOut(LocationBase):
     updated_at: datetime
     category: CategoryOut | None = None
     entrance_node: PathNodeOut | None = None
+    qr_identifier: str | None = None
+
+    @model_validator(mode="wrap")
+    @classmethod
+    def populate_qr_identifier(cls, data: Any, handler):
+        validated = handler(data)
+        if hasattr(data, "qr_code") and data.qr_code:
+            validated.qr_identifier = data.qr_code.identifier
+        elif hasattr(data, "qr_identifier") and getattr(data, "qr_identifier"):
+            validated.qr_identifier = getattr(data, "qr_identifier")
+        return validated
 
 
 class LocationDetailOut(LocationOut):
