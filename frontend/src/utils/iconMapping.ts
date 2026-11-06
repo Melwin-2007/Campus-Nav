@@ -24,6 +24,17 @@ import {
   Store,
   CheckCircle2,
   LucideIcon,
+  Navigation,
+  ArrowUp,
+  ArrowUpLeft,
+  ArrowUpRight,
+  ArrowLeft,
+  ArrowRight,
+  ArrowDownLeft,
+  ArrowDownRight,
+  CornerUpLeft,
+  CornerUpRight,
+  RotateCcw,
 } from 'lucide-react';
 
 export const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
@@ -126,3 +137,48 @@ export function getFacilityIconComponent(facilityName: string): LucideIcon {
 
   return CheckCircle2;
 }
+
+export function getManeuverIconComponent(action: string | undefined): LucideIcon {
+  if (!action) return Navigation;
+  const act = action.toLowerCase();
+  switch (act) {
+    case 'depart':
+      return Navigation;
+    case 'straight':
+      return ArrowUp;
+    case 'slight_left':
+      return ArrowUpLeft;
+    case 'slight_right':
+      return ArrowUpRight;
+    case 'turn_left':
+      return CornerUpLeft;
+    case 'turn_right':
+      return CornerUpRight;
+    case 'sharp_left':
+      return ArrowDownLeft;
+    case 'sharp_right':
+      return ArrowDownRight;
+    case 'u_turn':
+      return RotateCcw;
+    case 'arrive':
+      return CheckCircle2;
+    default:
+      return Navigation;
+  }
+}
+
+export const NODE_TYPE_COLORS: Record<string, string> = {
+  entrance: '#14B8A6', // Teal
+  junction: '#3B82F6', // Blue
+  gate: '#F59E0B',     // Amber
+  landmark: '#8B5CF6', // Purple
+};
+
+export const EDGE_TYPE_COLORS: Record<string, string> = {
+  footpath: '#3B82F6',      // Blue
+  ramp: '#10B981',          // Emerald Green
+  stairs: '#EF4444',        // Red
+  corridor: '#8B5CF6',      // Violet
+  road_crossing: '#F59E0B', // Amber
+};
+

@@ -202,3 +202,55 @@
 .scanner-laser {
   animation: laser-sweep 2.2s ease-in-out infinite alternate;
 }
+
+/* Animated Route Flowing Dash */
+.leaflet-route-flow {
+  stroke-dasharray: 8, 16;
+  animation: route-dash-flow 1.2s linear infinite;
+}
+
+@keyframes route-dash-flow {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaflet-route-flow {
+    animation: none;
+    stroke-dasharray: none;
+  }
+}
+
+/* Admin Graph Node and Edge Markers */
+.graph-node-marker {
+  transition: transform 0.15s ease-out;
+}
+.graph-node-marker:hover {
+  transform: scale(1.2);
+  z-index: 1200 !important;
+}
+
+/* Pulsing radar ping for health highlight */
+@keyframes health-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 16px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.health-pulse-marker {
+  animation: health-pulse 1.8s infinite;
+}
+

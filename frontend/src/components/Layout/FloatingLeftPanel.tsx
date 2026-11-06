@@ -1,19 +1,20 @@
 import React from 'react';
-import { Compass, Navigation, MapPin, X, ArrowLeft, Footprints, ShieldCheck } from 'lucide-react';
+import { Compass, Navigation, MapPin, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useNavigation } from '../../context/NavigationContext';
 import { SearchBar } from '../Search/SearchBar';
 import { CategoryChips } from '../Categories/CategoryChips';
 import { LocationDetail } from '../Location/LocationDetail';
+import { DirectionsPanel } from '../Directions/DirectionsPanel';
 
 export const FloatingLeftPanel: React.FC = () => {
   const {
     selectedLocation,
     setSelectedLocation,
     activeRoute,
-    clearRoute,
+    isDirectionsMode,
+    setIsDirectionsMode,
     locations,
     startDirectionsTo,
-    isOffCampus,
   } = useNavigation();
 
   return (
@@ -44,14 +45,34 @@ export const FloatingLeftPanel: React.FC = () => {
 
       {/* Persistent Search and Category Filtering Section */}
       <div className="p-4 pb-2 flex flex-col gap-2 shrink-0 border-b border-slate-100 dark:border-slate-800/60">
-        <SearchBar />
+        <div className="flex items-center gap-2">
+          <div className="flex-1 min-w-0">
+            <SearchBar />
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsDirectionsMode(!isDirectionsMode)}
+            className={`p-2.5 rounded-2xl border transition-all shrink-0 ${
+              isDirectionsMode || activeRoute
+                ? 'bg-brand-indigo text-white border-brand-indigo shadow-sm'
+                : 'bg-white dark:bg-slate-800/80 border-slate-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:border-brand-indigo'
+            }`}
+            title="Directions & Navigation"
+            aria-label="Directions & Navigation"
+          >
+            <Navigation size={18} />
+          </button>
+        </div>
         <CategoryChips />
       </div>
 
       {/* Main Dynamic Panel Body */}
       <div className="flex-1 overflow-y-auto no-scrollbar p-4 flex flex-col">
-        {/* State A: Location Detail View */}
-        {selectedLocation ? (
+        {/* State A: Directions View */}
+        {isDirectionsMode || activeRoute ? (
+          <DirectionsPanel />
+        ) : selectedLocation ? (
+          /* State B: Location Detail View */
           <div className="flex flex-col h-full">
             <div className="mb-2">
               <button
@@ -63,74 +84,6 @@ export const FloatingLeftPanel: React.FC = () => {
               </button>
             </div>
             <LocationDetail location={selectedLocation} />
-          </div>
-        ) : activeRoute ? (
-          /* State B: Active Navigation Directions View */
-          <div className="flex flex-col h-full gap-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-brand-teal/20 text-brand-teal flex items-center justify-center">
-                  <Navigation size={18} />
-                </div>
-                <div>
-                  <h3 className="font-heading font-bold text-sm text-slate-800 dark:text-slate-100">
-                    Route Directions
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    {activeRoute.algorithm_used.toUpperCase()} Navigation
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={clearRoute}
-                className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors"
-                title="Exit navigation"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            {/* Route Summary Card */}
-            <div className="p-3.5 rounded-2xl bg-brand-indigo/10 dark:bg-brand-indigo/20 border border-brand-indigo/20 flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-heading font-extrabold text-brand-indigo dark:text-indigo-300">
-                  {Math.round(activeRoute.distance_meters)}m
-                </div>
-                <div className="text-xs text-slate-600 dark:text-slate-300 flex items-center gap-1 mt-0.5">
-                  <Footprints size={13} />
-                  <span>~{activeRoute.duration_minutes} min walk</span>
-                </div>
-              </div>
-
-              {activeRoute.accessible_only && (
-                <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">
-                  Wheelchair Accessible
-                </span>
-              )}
-            </div>
-
-            {/* Turn by Turn Instructions */}
-            <div className="flex-1 overflow-y-auto no-scrollbar">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
-                Turn-by-turn guidance ({activeRoute.steps.length} steps)
-              </h4>
-              <ol className="relative border-l border-slate-200 dark:border-slate-700 ml-3 space-y-4 py-2">
-                {activeRoute.steps.map((step, idx) => (
-                  <li key={idx} className="mb-4 ml-6">
-                    <span className="absolute flex items-center justify-center w-6 h-6 rounded-full -left-3 ring-4 ring-white dark:ring-slate-900 bg-brand-teal text-white text-[11px] font-bold">
-                      {step.step_number}
-                    </span>
-                    <h5 className="font-medium text-xs text-slate-800 dark:text-slate-200 leading-snug">
-                      {step.instruction}
-                    </h5>
-                    <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
-                      {Math.round(step.distance_meters)} meters • {step.duration_seconds}s
-                    </p>
-                  </li>
-                ))}
-              </ol>
-            </div>
           </div>
         ) : (
           /* State C: Campus Overview & Featured Locations */

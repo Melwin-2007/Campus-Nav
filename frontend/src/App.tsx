@@ -7,6 +7,8 @@ import { DraggableBottomSheet } from './components/Layout/DraggableBottomSheet';
 import { SearchBar } from './components/Search/SearchBar';
 import { CategoryChips } from './components/Categories/CategoryChips';
 import { LocationDetail } from './components/Location/LocationDetail';
+import { DirectionsPanel } from './components/Directions/DirectionsPanel';
+import { AdminLoginModal } from './components/Admin/AdminLoginModal';
 import { QRScannerModal } from './components/Scanner/QRScannerModal';
 import { OffCampusBanner } from './components/Common/OffCampusBanner';
 import {
@@ -25,6 +27,10 @@ const MainLayout: React.FC = () => {
     setSelectedLocation,
     activeRoute,
     clearRoute,
+    isDirectionsMode,
+    setIsDirectionsMode,
+    isAdminLoginOpen,
+    setIsAdminLoginOpen,
     isScannerOpen,
     setIsScannerOpen,
     setBottomSheetSnap,
@@ -55,7 +61,11 @@ const MainLayout: React.FC = () => {
 
       {/* 4. Mobile Draggable Bottom Sheet (<768px) */}
       <DraggableBottomSheet>
-        {selectedLocation ? (
+        {isDirectionsMode || activeRoute ? (
+          <div className="p-4">
+            <DirectionsPanel />
+          </div>
+        ) : selectedLocation ? (
           <LocationDetail
             location={selectedLocation}
             onClose={() => {
@@ -63,76 +73,6 @@ const MainLayout: React.FC = () => {
               setBottomSheetSnap('peek');
             }}
           />
-        ) : activeRoute ? (
-          <div className="p-4 flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-brand-teal/20 text-brand-teal flex items-center justify-center">
-                  <NavIcon size={18} />
-                </div>
-                <div>
-                  <h3 className="font-heading font-bold text-sm text-slate-800 dark:text-slate-100">
-                    Active Route
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    {activeRoute.algorithm_used.toUpperCase()} Path
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => {
-                  clearRoute();
-                  setBottomSheetSnap('peek');
-                }}
-                className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors"
-                title="Exit navigation"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Distance & Time Highlight Card */}
-            <div className="p-3.5 rounded-2xl bg-brand-indigo/10 dark:bg-brand-indigo/20 border border-brand-indigo/20 flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-heading font-extrabold text-brand-indigo dark:text-indigo-300">
-                  {Math.round(activeRoute.distance_meters)}m
-                </div>
-                <div className="text-xs text-slate-600 dark:text-slate-300 flex items-center gap-1 mt-0.5">
-                  <Footprints size={13} />
-                  <span>~{activeRoute.duration_minutes} min walking time</span>
-                </div>
-              </div>
-
-              {activeRoute.accessible_only && (
-                <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">
-                  Accessible
-                </span>
-              )}
-            </div>
-
-            {/* Turn by Turn Steps List */}
-            <div className="mt-2 space-y-3">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                Directions ({activeRoute.steps.length} steps)
-              </h4>
-              <ol className="relative border-l border-slate-200 dark:border-slate-700 ml-3 space-y-3 py-1">
-                {activeRoute.steps.map((step, idx) => (
-                  <li key={idx} className="mb-3 ml-5">
-                    <span className="absolute flex items-center justify-center w-5 h-5 rounded-full -left-2.5 ring-4 ring-white dark:ring-slate-900 bg-brand-teal text-white text-[10px] font-bold">
-                      {step.step_number}
-                    </span>
-                    <h5 className="font-medium text-xs text-slate-800 dark:text-slate-200 leading-snug">
-                      {step.instruction}
-                    </h5>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">
-                      {Math.round(step.distance_meters)}m • {step.duration_seconds}s
-                    </p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
         ) : (
           /* Default Peek Content: Campus Glance */
           <div className="p-4 flex flex-col gap-2">
@@ -203,6 +143,21 @@ const MainLayout: React.FC = () => {
         </button>
 
         <button
+          onClick={() => {
+            setIsDirectionsMode(true);
+            setBottomSheetSnap('half');
+          }}
+          className={`flex flex-col items-center gap-1 transition-colors ${
+            isDirectionsMode || activeRoute
+              ? 'text-brand-indigo dark:text-brand-teal font-bold'
+              : 'text-slate-600 dark:text-slate-300 hover:text-brand-indigo dark:hover:text-brand-teal'
+          }`}
+        >
+          <NavIcon size={18} />
+          <span className="text-[10px] font-medium">Directions</span>
+        </button>
+
+        <button
           onClick={() => setIsScannerOpen(true)}
           className="flex flex-col items-center gap-1 text-brand-indigo dark:text-brand-teal hover:opacity-80 transition-opacity"
         >
@@ -213,6 +168,12 @@ const MainLayout: React.FC = () => {
 
       {/* 6. In-Browser Native QR Code Scanner Modal */}
       <QRScannerModal isOpen={isScannerOpen} onClose={() => setIsScannerOpen(false)} />
+
+      {/* 7. Admin Authentication & Graph Editor Modal */}
+      <AdminLoginModal
+        isOpen={isAdminLoginOpen}
+        onClose={() => setIsAdminLoginOpen(false)}
+      />
     </div>
   );
 };

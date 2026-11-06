@@ -56,7 +56,7 @@ Decoupled full-stack progressive web application for university campus wayfindin
 | M1 | Architecture Scaffolding & Database Engine | Backend venv, FastAPI setup, SQLite schema, 14 POIs / 12 Categories / 26 Nodes / 38 Edges seed loader, `/api/health`, root doc specs (PRD, DESIGN, RULES, PROGRESS) | none | DONE |
 | M2 | Graph Navigation & Routing Engine | Dijkstra & A* pathfinding, Haversine heuristic, bearing, turn maneuvers, coordinate snapping, accessible routing filter, `POST /api/routes` | M1 | DONE |
 | M3 | REST APIs, Authentication, & QR Services | Public POI/Search/Category endpoints, JWT Admin Auth, Admin CRUD, QR Code PNG & PDF poster generator, Data Health Checker | M1, M2 | DONE |
-| M4 | Interactive Map-First Frontend Experience | React + Vite + Tailwind setup, full-screen Leaflet map, custom SVG category markers, debounced search, category chips, bottom sheet, location details, GPS tracker, QR scanner modal | M1, M3 | PLANNED |
+| M4 | Interactive Map-First Frontend Experience | React + Vite + Tailwind setup, full-screen Leaflet map, custom SVG category markers, debounced search, category chips, bottom sheet, location details, GPS tracker, QR scanner modal | M1, M3 | DONE |
 | M5 | Directions UI & Admin Visual Map Graph Editor | Directions drawer, animated route polyline, step-by-step turn cards, zoom-to-maneuver, interactive visual graph editor for nodes/edges on Leaflet canvas | M2, M3, M4 | PLANNED |
 | M6 | Full E2E Verification & Adversarial Hardening | Phase 1: 100% pass across all E2E test tiers (Tiers 1-4). Phase 2: Adversarial coverage hardening (Tier 5 challenger loop). | M1-M5, TEST_READY | PLANNED |
 

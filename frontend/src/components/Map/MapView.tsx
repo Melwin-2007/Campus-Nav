@@ -14,6 +14,9 @@ import { CategoryMarker } from './CategoryMarker';
 import { UserMarker } from './UserMarker';
 import { Location } from '../../types';
 import { CAMPUS_CENTER, CAMPUS_BOUNDS } from '../../utils/geoUtils';
+import { RoutePolyline } from './RoutePolyline';
+import { GraphEditor } from '../Admin/GraphEditor';
+import api from '../../services/api';
 import {
   Plus,
   Minus,
@@ -21,6 +24,8 @@ import {
   Compass,
   Sun,
   Moon,
+  Layers,
+  ShieldAlert,
 } from 'lucide-react';
 
 // Tile URL templates
@@ -100,29 +105,6 @@ const MapController: React.FC<MapControllerProps> = ({
   return null;
 };
 
-// Route Termini Icons
-const startIcon = L.divIcon({
-  html: `
-    <div style="background-color: #10B981; width: 22px; height: 22px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center;">
-      <div style="background-color: #FFFFFF; width: 6px; height: 6px; border-radius: 50%;"></div>
-    </div>
-  `,
-  className: 'route-start-pin',
-  iconSize: [22, 22],
-  iconAnchor: [11, 11],
-});
-
-const endIcon = L.divIcon({
-  html: `
-    <div style="background-color: #EF4444; width: 22px; height: 22px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center;">
-      <div style="background-color: #FFFFFF; width: 6px; height: 6px; border-radius: 50%;"></div>
-    </div>
-  `,
-  className: 'route-dest-pin',
-  iconSize: [22, 22],
-  iconAnchor: [11, 11],
-});
-
 export const MapView: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();
   const {
@@ -131,6 +113,10 @@ export const MapView: React.FC = () => {
     selectedCategoryId,
     userLocation,
     activeRoute,
+    activeStepIndex,
+    isAdminMode,
+    setIsAdminMode,
+    setIsAdminLoginOpen,
     flyToTarget,
     setSelectedLocation,
     setFlyToTarget,
@@ -233,52 +219,35 @@ export const MapView: React.FC = () => {
 
         {/* Active Route Polyline Visualizer */}
         {activeRoute && activeRoute.coordinates.length > 1 && (
-          <>
-            {/* Outer polyline shadow/border */}
-            <Polyline
-              positions={activeRoute.coordinates}
-              pathOptions={{
-                color: isDark ? '#0F172A' : '#FFFFFF',
-                weight: 9,
-                opacity: 0.9,
-                lineCap: 'round',
-                lineJoin: 'round',
-              }}
-            />
-            {/* Inner vibrant teal active path line */}
-            <Polyline
-              positions={activeRoute.coordinates}
-              pathOptions={{
-                color: '#14B8A6',
-                weight: 5,
-                opacity: 0.95,
-                lineCap: 'round',
-                lineJoin: 'round',
-              }}
-            />
-
-            {/* Start Pin */}
-            <Marker position={activeRoute.coordinates[0]} icon={startIcon}>
-              <Tooltip direction="top" offset={[0, -12]}>
-                <span className="font-semibold text-xs text-emerald-700">Start</span>
-              </Tooltip>
-            </Marker>
-
-            {/* Destination Pin */}
-            <Marker
-              position={activeRoute.coordinates[activeRoute.coordinates.length - 1]}
-              icon={endIcon}
-            >
-              <Tooltip direction="top" offset={[0, -12]}>
-                <span className="font-semibold text-xs text-rose-700">Destination</span>
-              </Tooltip>
-            </Marker>
-          </>
+          <RoutePolyline route={activeRoute} />
         )}
+
+        {/* Visual Map Graph Editor (Admin Mode Layer) */}
+        {isAdminMode && <GraphEditor />}
       </MapContainer>
 
       {/* Floating Glassmorphic Map Control Buttons (Top-Right) */}
       <div className="absolute top-4 right-4 z-[900] flex flex-col gap-2">
+        {/* Admin Graph Editor Toggle */}
+        <button
+          onClick={() => {
+            if (api.auth.isAuthenticated()) {
+              setIsAdminMode(!isAdminMode);
+            } else {
+              setIsAdminLoginOpen(true);
+            }
+          }}
+          className={`touch-target p-2.5 rounded-xl glass-panel transition-all active:scale-95 ${
+            isAdminMode
+              ? 'bg-amber-500 text-white shadow-md'
+              : 'text-slate-700 dark:text-slate-200 hover:text-brand-indigo dark:hover:text-brand-teal'
+          }`}
+          title={isAdminMode ? 'Exit Graph Editor' : 'Admin Graph Editor'}
+          aria-label="Admin Graph Editor"
+        >
+          <Layers size={20} />
+        </button>
+
         {/* Reset View */}
         <button
           onClick={handleResetCampusView}

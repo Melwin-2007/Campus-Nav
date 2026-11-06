@@ -315,3 +315,54 @@ export interface RecentSearchItem {
   latitude: number;
   longitude: number;
 }
+
+// ============================================================================
+// 8. Milestone 5 Types: Directions, Graph Editor & Admin Studio
+// ============================================================================
+
+export interface EndpointSelection {
+  type: 'location' | 'my_location' | 'coordinates';
+  location?: Location;
+  latitude?: number;
+  longitude?: number;
+  label: string;
+}
+
+export type EditorTool = 'navigate' | 'add_node' | 'link_nodes' | 'inspect';
+
+export type AdminTab = 'overview' | 'locations' | 'graph' | 'tools';
+
+export interface HealthHighlightTarget {
+  type: 'node' | 'edge' | 'location';
+  id: number;
+  latitude: number;
+  longitude: number;
+  to_latitude?: number;
+  to_longitude?: number;
+  severity: 'warning' | 'error';
+  title: string;
+  description: string;
+}
+
+export interface ImportRowIssue {
+  row_index: number;
+  entity: string;
+  identifier?: string;
+  field?: string;
+  message: string;
+  severity: 'error' | 'warning';
+}
+
+export interface ImportReportResponse {
+  status: 'valid' | 'invalid' | 'success';
+  dry_run: boolean;
+  total_rows: number;
+  valid_rows_count: number;
+  error_count: number;
+  warning_count: number;
+  issues: ImportRowIssue[];
+  preview: Array<Record<string, unknown>>;
+  imported_counts?: Record<string, number>;
+  message: string;
+}
+

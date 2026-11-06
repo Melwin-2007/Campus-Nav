@@ -194,6 +194,11 @@ def test_category_deletion_restricted_when_locations_exist(db_session):
         db_session.commit()
     db_session.rollback()
 
+    # Clean up test entities so subsequent tests see a pristine seeded database
+    db_session.delete(loc)
+    db_session.delete(cat)
+    db_session.commit()
+
 
 def test_entrance_node_deletion_sets_null_on_location(db_session):
     """Verify deleting entrance node sets entrance_node_id to NULL on location."""
@@ -228,6 +233,11 @@ def test_entrance_node_deletion_sets_null_on_location(db_session):
     updated_loc = db_session.get(Location, loc_id)
     assert updated_loc is not None
     assert updated_loc.entrance_node_id is None, "entrance_node_id should be SET NULL on node deletion."
+
+    # Clean up test entities
+    db_session.delete(updated_loc)
+    db_session.delete(cat)
+    db_session.commit()
 
 
 def test_password_hashing_and_verification():
