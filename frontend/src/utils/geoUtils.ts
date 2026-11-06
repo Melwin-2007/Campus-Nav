@@ -22,6 +22,15 @@ export function haversineDistance(
   lat2: number,
   lon2: number
 ): number {
+  if (
+    typeof lat1 !== 'number' || typeof lon1 !== 'number' ||
+    typeof lat2 !== 'number' || typeof lon2 !== 'number' ||
+    Number.isNaN(lat1) || Number.isNaN(lon1) ||
+    Number.isNaN(lat2) || Number.isNaN(lon2)
+  ) {
+    return NaN;
+  }
+
   const R = 6371000; // Earth radius in meters
   const toRad = (deg: number) => (deg * Math.PI) / 180;
 
@@ -44,6 +53,16 @@ export function isUserOffCampus(
   userLon: number,
   thresholdMeters: number = 300
 ): { offCampus: boolean; distance: number } {
+  if (
+    typeof userLat !== 'number' || typeof userLon !== 'number' ||
+    Number.isNaN(userLat) || Number.isNaN(userLon)
+  ) {
+    return {
+      offCampus: true,
+      distance: Infinity,
+    };
+  }
+
   const dist = haversineDistance(userLat, userLon, CAMPUS_CENTER.lat, CAMPUS_CENTER.lon);
   return {
     offCampus: dist > thresholdMeters,

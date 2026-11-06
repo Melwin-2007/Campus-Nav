@@ -3,6 +3,7 @@ import { Html5Qrcode } from 'html5-qrcode';
 import { X, QrCode, Camera, AlertCircle, ArrowRight } from 'lucide-react';
 import api from '../../services/api';
 import { useNavigation } from '../../context/NavigationContext';
+import { Location } from '../../types';
 
 interface QRScannerModalProps {
   isOpen: boolean;
@@ -21,18 +22,36 @@ export const QRScannerModal: React.FC<QRScannerModalProps> = ({ isOpen, onClose 
   // Extract identifier from scanned payload
   const parseScannedText = (text: string): string => {
     const trimmed = text.trim();
+    if (!trimmed) return '';
+
     try {
+      // Support relative paths like /q/123, /qr/LOC-0001, or /api/qr/token
+      if (trimmed.startsWith('/')) {
+        const parts = trimmed.split('/').filter(Boolean);
+        const qrIdx = parts.findIndex((p) => p === 'qr' || p === 'q');
+        if (qrIdx !== -1 && qrIdx + 1 < parts.length) {
+          return parts[qrIdx + 1].trim();
+        }
+      }
+
       if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
         const url = new URL(trimmed);
         const locParam = url.searchParams.get('location_id') || url.searchParams.get('location');
-        if (locParam) return locParam;
+        if (locParam) return locParam.trim();
 
         const pathParts = url.pathname.split('/').filter(Boolean);
-        if (pathParts.length >= 2 && (pathParts[0] === 'q' || pathParts[0] === 'qr')) {
-          return pathParts[1];
+        const qrIdx = pathParts.findIndex((p) => p === 'qr' || p === 'q');
+        if (qrIdx !== -1 && qrIdx + 1 < pathParts.length) {
+          return pathParts[qrIdx + 1].trim();
         }
       }
     } catch {}
+
+    if (trimmed.startsWith('/q/') || trimmed.startsWith('/qr/')) {
+      const parts = trimmed.split('/').filter(Boolean);
+      if (parts.length >= 2) return parts[1].trim();
+    }
+
     return trimmed;
   };
 
@@ -47,14 +66,18 @@ export const QRScannerModal: React.FC<QRScannerModalProps> = ({ isOpen, onClose 
 
       try {
         const qrResult = await api.qr.resolve(identifier);
-        if (qrResult.location) {
-          setSelectedLocation(qrResult.location);
+        const resolvedLocation: Location | null =
+          (qrResult as any)?.location ??
+          (qrResult && typeof (qrResult as any).latitude === 'number' ? (qrResult as Location) : null);
+
+        if (resolvedLocation) {
+          setSelectedLocation(resolvedLocation);
           setFlyToTarget({
-            lat: qrResult.location.latitude,
-            lon: qrResult.location.longitude,
+            lat: resolvedLocation.latitude,
+            lon: resolvedLocation.longitude,
             zoom: 18,
           });
-          startDirectionsFrom(qrResult.location);
+          startDirectionsFrom(resolvedLocation);
           onClose();
         } else {
           setErrorMessage(`QR code recognized but no associated location data was found.`);

@@ -1,7 +1,7 @@
 import { OperatingStatus } from '../types';
 
 export function evaluateOperatingHours(openingHours: string | null | undefined): OperatingStatus {
-  if (!openingHours || openingHours.trim() === '') {
+  if (typeof openingHours !== 'string' || openingHours.trim() === '') {
     return {
       isOpen: null,
       statusLabel: 'Hours not listed',

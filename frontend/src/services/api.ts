@@ -11,7 +11,7 @@ import {
   PathEdge,
   PathEdgeCreate,
   PathEdgeUpdate,
-  QRCode,
+  HealthResponse,
   RouteRequest,
   RouteResponse,
   LoginRequest,
@@ -141,8 +141,8 @@ export const api = {
 
   // QR Codes
   qr: {
-    resolve: async (identifier: string): Promise<QRCode> => {
-      const response = await apiClient.get<QRCode>(`/qr/${identifier}`);
+    resolve: async (identifier: string): Promise<Location> => {
+      const response = await apiClient.get<Location>(`/qr/${identifier}`);
       return response.data;
     },
   },
@@ -194,14 +194,14 @@ export const api = {
       return response.data;
     },
     getHealth: async (): Promise<DataHealthReport> => {
-      const response = await apiClient.get<DataHealthReport>('/admin/health');
+      const response = await apiClient.get<DataHealthReport>('/admin/health-check');
       return response.data;
     },
   },
 
   // Health
-  health: async (): Promise<{ status: string; timestamp: string }> => {
-    const response = await apiClient.get<{ status: string; timestamp: string }>('/health');
+  health: async (): Promise<HealthResponse> => {
+    const response = await apiClient.get<HealthResponse>('/health');
     return response.data;
   },
 };

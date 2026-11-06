@@ -236,6 +236,24 @@ export interface TokenResponse {
   token_type: string;
 }
 
+export interface HealthResponse {
+  status: string;
+}
+
+export interface DeleteResponse {
+  status: string;
+  id: number;
+  entity: string;
+}
+
+export interface PhotoUploadResponse {
+  status: string;
+  location_id: number;
+  photo_url: string;
+  filename: string;
+  size_bytes: number;
+}
+
 export interface AdminStats {
   total_locations: number;
   total_categories: number;

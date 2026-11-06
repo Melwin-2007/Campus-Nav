@@ -62,7 +62,12 @@ export function getCategoryIconComponent(iconName: string): LucideIcon {
 }
 
 export function getFacilityIconComponent(facilityName: string): LucideIcon {
+  if (typeof facilityName !== 'string' || !facilityName.trim()) {
+    return CheckCircle2;
+  }
+
   const lower = facilityName.toLowerCase();
+
   if (lower.includes('wifi') || lower.includes('wi-fi') || lower.includes('internet')) {
     return Wifi;
   }
@@ -75,16 +80,32 @@ export function getFacilityIconComponent(facilityName: string): LucideIcon {
   if (lower.includes('elevator') || lower.includes('lift')) {
     return ArrowUpDown;
   }
-  if (lower.includes('ac') || lower.includes('air condition') || lower.includes('cooling')) {
-    return Wind;
-  }
-  if (lower.includes('medical') || lower.includes('doctor') || lower.includes('first aid') || lower.includes('pharmacy')) {
+  // Medical check prioritized before Climate/AC to prevent false 'ac' collisions in 'pharmacy'
+  if (
+    lower.includes('medical') ||
+    lower.includes('doctor') ||
+    lower.includes('first aid') ||
+    lower.includes('pharmacy') ||
+    lower.includes('emergency care') ||
+    lower.includes('clinic') ||
+    lower.includes('dispensary')
+  ) {
     return HeartPulse;
   }
-  if (lower.includes('ev') || lower.includes('charging') || lower.includes('electric')) {
+  // Climate check using word boundary regex for 'ac'
+  if (/\bac\b/i.test(lower) || lower.includes('air condition') || lower.includes('cooling')) {
+    return Wind;
+  }
+  // EV check using word boundary regex for 'ev'
+  if (/\bev\b/i.test(lower) || lower.includes('charging') || lower.includes('electric vehicle')) {
     return Zap;
   }
-  if (lower.includes('parking') || lower.includes('vehicle')) {
+  // Parking & vehicle bays using word boundary regex to avoid matching 'care' or 'card'
+  if (
+    lower.includes('parking') ||
+    lower.includes('vehicle') ||
+    /\b(car|cars|bay|bays|two-wheeler|two wheeler|garage|valet)\b/i.test(lower)
+  ) {
     return Car;
   }
   if (lower.includes('canteen') || lower.includes('food') || lower.includes('dining')) {
@@ -96,11 +117,12 @@ export function getFacilityIconComponent(facilityName: string): LucideIcon {
   if (lower.includes('study') || lower.includes('book') || lower.includes('library')) {
     return BookOpen;
   }
-  if (lower.includes('atm') || lower.includes('cash')) {
+  if (/\batm\b/i.test(lower) || lower.includes('cash')) {
     return CreditCard;
   }
   if (lower.includes('store') || lower.includes('shop') || lower.includes('stationery')) {
     return Store;
   }
+
   return CheckCircle2;
 }
