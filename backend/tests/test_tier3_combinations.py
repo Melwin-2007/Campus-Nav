@@ -108,8 +108,8 @@ class TestCrossFeatureCombinations:
             # Step 1: Admin creates new path node (Innovation Hub Junction)
             node_payload = {
                 "name": "E2E Test Innovation Hub Junction",
-                "latitude": 17.65995,
-                "longitude": 75.90645,
+                "latitude": 15.880612,
+                "longitude": 74.519362,
                 "floor": 0,
                 "node_type": "junction",
                 "is_accessible": True,
@@ -165,8 +165,8 @@ class TestCrossFeatureCombinations:
                 "category_id": 1,
                 "description": "Cutting-edge quantum materials and computing research facility.",
                 "department": "School of Physical Sciences",
-                "latitude": 17.66055,
-                "longitude": 75.90585,
+                "latitude": 15.881212,
+                "longitude": 74.518762,
                 "entrance_node_id": 3,
                 "opening_hours": "09:00 - 18:00",
                 "facilities": ["Cleanroom", "Supercomputers", "Restroom"],
@@ -195,8 +195,8 @@ class TestCrossFeatureCombinations:
         """Pair 5: Snaps GPS coordinates near sports field, routes to library, validates 1.3 m/s pacing."""
         # Point near Sports Arena (Node 13)
         route_req = {
-            "start_lat": 17.65875,
-            "start_lon": 75.90565,
+            "start_lat": 15.879412,
+            "start_lon": 74.518562,
             "destination_node_id": 9,  # Library
             "accessible_only": False
         }

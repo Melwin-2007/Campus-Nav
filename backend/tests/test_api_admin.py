@@ -105,8 +105,8 @@ def test_admin_location_crud_cycle(client, admin_auth_headers):
         "category_id": 1,
         "description": "Dedicated testing laboratory.",
         "department": "Engineering Department",
-        "latitude": 17.6601,
-        "longitude": 75.9062,
+        "latitude": 15.880762,
+        "longitude": 74.519112,
         "entrance_node_id": 1,
         "opening_hours": "08:00 - 20:00",
         "facilities": ["Wi-Fi", "Accessible Restroom"],
@@ -145,8 +145,8 @@ def test_admin_location_create_invalid_category(client, admin_auth_headers):
     payload = {
         "name": "Invalid Category Loc",
         "category_id": 99999,
-        "latitude": 17.6600,
-        "longitude": 75.9060,
+        "latitude": 15.880662,
+        "longitude": 74.518912,
     }
     response = client.post("/api/admin/locations", json=payload, headers=admin_auth_headers)
     assert response.status_code == 400
@@ -158,8 +158,8 @@ def test_admin_photo_upload_success_and_validations(client, admin_auth_headers):
     loc_payload = {
         "name": "Photo Test Building",
         "category_id": 1,
-        "latitude": 17.6605,
-        "longitude": 75.9065,
+        "latitude": 15.881162,
+        "longitude": 74.519412,
     }
     loc_id = client.post("/api/admin/locations", json=loc_payload, headers=admin_auth_headers).json()["id"]
 
@@ -195,14 +195,14 @@ def test_admin_photo_upload_success_and_validations(client, admin_auth_headers):
 def test_admin_nodes_crud_cycle(client, admin_auth_headers):
     """Admin node creation, coordinates validation, and cascading deletion."""
     # 1. Invalid coordinates rejected (HTTP 422)
-    bad_payload = {"name": "Invalid Node", "latitude": 95.0, "longitude": 75.9064, "floor": 0}
+    bad_payload = {"name": "Invalid Node", "latitude": 95.0, "longitude": 74.519312, "floor": 0}
     assert client.post("/api/admin/nodes", json=bad_payload, headers=admin_auth_headers).status_code == 422
 
     # 2. Valid create
     valid_payload = {
         "name": "Admin Unit Test Node",
-        "latitude": 17.6599,
-        "longitude": 75.9064,
+        "latitude": 15.880562,
+        "longitude": 74.519312,
         "floor": 0,
         "node_type": "junction",
         "is_accessible": True,

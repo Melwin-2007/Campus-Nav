@@ -36,7 +36,7 @@ class TestMathematicalPrimitives:
 
     def test_haversine_zero_distance(self):
         """TR-MATH-02: Distance between identical coordinates is strictly 0.0."""
-        dist = haversine_distance(17.6599, 75.9064, 17.6599, 75.9064)
+        dist = haversine_distance(15.880562, 74.519312, 15.880562, 74.519312)
         assert dist == 0.0
 
     def test_initial_bearing_cardinal_axes(self):
@@ -80,9 +80,9 @@ class TestGraphPathfindingAlgorithms:
     def test_dijkstra_shortest_path_simple_triangle(self):
         """TR-ALGO-01: Dijkstra finds optimal shortest path on synthetic triangle graph."""
         nodes = [
-            GraphNode(id=1, latitude=17.65990, longitude=75.9064),
-            GraphNode(id=2, latitude=17.65995, longitude=75.9064),
-            GraphNode(id=3, latitude=17.66000, longitude=75.9064),
+            GraphNode(id=1, latitude=15.880562, longitude=74.519312),
+            GraphNode(id=2, latitude=15.880612, longitude=74.519312),
+            GraphNode(id=3, latitude=15.880662, longitude=74.519312),
         ]
         edges = [
             # Direct edge 1 -> 3 has cost 25.0
@@ -99,9 +99,9 @@ class TestGraphPathfindingAlgorithms:
     def test_astar_shortest_path_simple_triangle(self):
         """TR-ALGO-02: A* finds optimal path identical to Dijkstra on synthetic triangle graph."""
         nodes = [
-            GraphNode(id=1, latitude=17.65990, longitude=75.9064),
-            GraphNode(id=2, latitude=17.65995, longitude=75.9064),
-            GraphNode(id=3, latitude=17.66000, longitude=75.9064),
+            GraphNode(id=1, latitude=15.880562, longitude=74.519312),
+            GraphNode(id=2, latitude=15.880612, longitude=74.519312),
+            GraphNode(id=3, latitude=15.880662, longitude=74.519312),
         ]
         edges = [
             GraphEdge(id=1, from_node_id=1, to_node_id=3, distance=25.0, is_bidirectional=True),
@@ -349,8 +349,8 @@ class TestRouteAPIEndpointIntegration:
     def test_post_routes_with_valid_coordinates_snapping(self, client):
         """TR-API-02: GPS coordinate near Main Gate snaps within 300m and returns route."""
         payload = {
-            "start_lat": 17.65825,
-            "start_lon": 75.90645,
+            "start_lat": 15.878912,
+            "start_lon": 74.519362,
             "destination_node_id": 1,
         }
         response = client.post("/api/routes", json=payload)
@@ -362,8 +362,8 @@ class TestRouteAPIEndpointIntegration:
     def test_post_routes_gps_outside_300m_returns_400(self, client):
         """TR-API-03: GPS coordinates > 300m away from campus return HTTP 400 Bad Request."""
         payload = {
-            "start_lat": 17.6800,
-            "start_lon": 75.9200,
+            "start_lat": 15.900662,
+            "start_lon": 74.532912,
             "destination_node_id": 1,
         }
         response = client.post("/api/routes", json=payload)

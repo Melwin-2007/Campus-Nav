@@ -111,7 +111,7 @@ class TestBoundaryAngleClassification:
         """CH2-ANG-03: End-to-end instruction generation across all boundary angles produces valid RouteSteps without KeyError or IndexError."""
         R = 6371000.0
         d = 50.0  # 50m legs
-        lat_v, lon_v = 17.6600, 75.9060
+        lat_v, lon_v = 15.880662, 74.518912
         lat_u = lat_v - (d / R) * (180.0 / math.pi)
         lon_u = lon_v
 
@@ -205,17 +205,17 @@ class TestExact300mBoundarySnapping:
         for _ in range(100):
             mid = (low + high) / 2.0
             d = haversine_distance(mid, base_lon, base_lat, base_lon)
-            if d < target_dist:
-                high = mid
-            else:
+            if d > target_dist:
                 low = mid
-        return mid, base_lon
+            else:
+                high = mid
+        return high, base_lon
 
     def test_unit_snap_coordinate_threshold_295m_vs_305m(self):
         """CH2-SNAP-01: Unit level snap_coordinate: 295m snaps successfully, 305m raises HTTP 400."""
-        # Node 21: southernmost active node at (17.6582, 75.9065)
-        lat_295, lon_295 = self._compute_geodesic_offset(17.6582, 75.9065, 295.0)
-        lat_305, lon_305 = self._compute_geodesic_offset(17.6582, 75.9065, 305.0)
+        # Node 21: southernmost active node at (15.878862, 74.519412)
+        lat_295, lon_295 = self._compute_geodesic_offset(15.878862, 74.519412, 295.0)
+        lat_305, lon_305 = self._compute_geodesic_offset(15.878862, 74.519412, 305.0)
 
         db = SessionLocal()
         try:
@@ -236,8 +236,8 @@ class TestExact300mBoundarySnapping:
 
     def test_unit_snap_coordinate_exact_300m_boundary_limit(self):
         """CH2-SNAP-02: Unit level snap_coordinate: exactly 300.0m succeeds; 300.001m fails with 400."""
-        lat_300_000, lon = self._compute_geodesic_offset(17.6582, 75.9065, 300.0)
-        lat_300_001, _ = self._compute_geodesic_offset(17.6582, 75.9065, 300.001)
+        lat_300_000, lon = self._compute_geodesic_offset(15.878862, 74.519412, 300.0)
+        lat_300_001, _ = self._compute_geodesic_offset(15.878862, 74.519412, 300.001)
 
         db = SessionLocal()
         try:
@@ -257,7 +257,7 @@ class TestExact300mBoundarySnapping:
 
     def test_api_routes_snap_start_295m_success(self, client: TestClient):
         """CH2-SNAP-03: POST /api/routes with start coordinate at 295m distance returns HTTP 200."""
-        lat_295, lon_295 = self._compute_geodesic_offset(17.6582, 75.9065, 295.0)
+        lat_295, lon_295 = self._compute_geodesic_offset(15.878862, 74.519412, 295.0)
         payload = {
             "start_lat": round(lat_295, 7),
             "start_lon": round(lon_295, 7),
@@ -273,7 +273,7 @@ class TestExact300mBoundarySnapping:
 
     def test_api_routes_snap_start_305m_returns_400(self, client: TestClient):
         """CH2-SNAP-04: POST /api/routes with start coordinate at 305m distance returns HTTP 400 Bad Request."""
-        lat_305, lon_305 = self._compute_geodesic_offset(17.6582, 75.9065, 305.0)
+        lat_305, lon_305 = self._compute_geodesic_offset(15.878862, 74.519412, 305.0)
         payload = {
             "start_lat": round(lat_305, 7),
             "start_lon": round(lon_305, 7),
@@ -287,8 +287,8 @@ class TestExact300mBoundarySnapping:
 
     def test_api_routes_snap_destination_295m_success_and_305m_failure(self, client: TestClient):
         """CH2-SNAP-05: Destination snapping at 295m succeeds (200) and at 305m fails (400)."""
-        lat_295, lon_295 = self._compute_geodesic_offset(17.6582, 75.9065, 295.0)
-        lat_305, lon_305 = self._compute_geodesic_offset(17.6582, 75.9065, 305.0)
+        lat_295, lon_295 = self._compute_geodesic_offset(15.878862, 74.519412, 295.0)
+        lat_305, lon_305 = self._compute_geodesic_offset(15.878862, 74.519412, 305.0)
 
         # 295m destination: Success
         res_295 = client.post(
@@ -333,16 +333,16 @@ class TestAccessibilityEdgeCases:
         try:
             n_start = PathNode(
                 id=n_start_id,
-                latitude=17.6570,
-                longitude=75.9060,
+                latitude=15.877662,
+                longitude=74.518912,
                 name="Stairs Tower Base",
                 is_accessible=True,
                 is_active=True,
             )
             n_dest = PathNode(
                 id=n_dest_id,
-                latitude=17.6571,
-                longitude=75.9060,
+                latitude=15.877762,
+                longitude=74.518912,
                 name="Stairs Tower Summit",
                 is_accessible=True,
                 is_active=True,

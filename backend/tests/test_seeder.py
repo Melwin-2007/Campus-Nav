@@ -57,8 +57,8 @@ def test_seed_locations_count_and_attributes(db_session):
 
     # Check that all locations have valid coordinates around campus
     for loc in locations:
-        assert 17.65 <= loc.latitude <= 17.67, f"Location {loc.name} lat out of campus range"
-        assert 75.90 <= loc.longitude <= 75.92, f"Location {loc.name} lon out of campus range"
+        assert 15.87 <= loc.latitude <= 15.89, f"Location {loc.name} lat out of campus range"
+        assert 74.51 <= loc.longitude <= 74.53, f"Location {loc.name} lon out of campus range"
         assert loc.category_id is not None
         assert loc.entrance_node_id is not None
 

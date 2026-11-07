@@ -290,10 +290,10 @@ class TestCoordinateSnappingFeature:
     """Feature 6: Coordinate Snapping Logic."""
 
     def test_snap_origin_near_main_gate(self, client):
-        """T1-SNP-01: GPS near Main Gate (17.65825, 75.90645) snaps to campus graph and routes."""
+        """T1-SNP-01: GPS near Main Gate (15.878912, 74.519362) snaps to campus graph and routes."""
         payload = {
-            "start_lat": 17.65825,
-            "start_lon": 75.90645,
+            "start_lat": 15.878912,
+            "start_lon": 74.519362,
             "destination_node_id": 1
         }
         response = client.post("/api/routes", json=payload)
@@ -305,8 +305,8 @@ class TestCoordinateSnappingFeature:
         """T1-SNP-02: Destination GPS coordinates snap to nearest entrance node."""
         payload = {
             "start_node_id": 21,
-            "destination_lat": 17.65992,
-            "destination_lon": 75.90641
+            "destination_lat": 15.880582,
+            "destination_lon": 74.519322
         }
         response = client.post("/api/routes", json=payload)
         assert response.status_code == 200
@@ -314,10 +314,10 @@ class TestCoordinateSnappingFeature:
     def test_snap_both_origin_and_destination(self, client):
         """T1-SNP-03: Both origin and destination supplied as raw coordinates."""
         payload = {
-            "start_lat": 17.65825,
-            "start_lon": 75.90645,
-            "destination_lat": 17.66085,
-            "destination_lon": 75.90732
+            "start_lat": 15.878912,
+            "start_lon": 74.519362,
+            "destination_lat": 15.881512,
+            "destination_lon": 74.520232
         }
         response = client.post("/api/routes", json=payload)
         assert response.status_code == 200
@@ -325,7 +325,7 @@ class TestCoordinateSnappingFeature:
     def test_snap_coordinates_payload_aliases(self, client):
         """T1-SNP-04: Supports start_coords tuple / array representation."""
         payload = {
-            "start_coords": [17.65825, 75.90645],
+            "start_coords": [15.878912, 74.519362],
             "destination_node_id": 1
         }
         response = client.post("/api/routes", json=payload)
@@ -335,8 +335,8 @@ class TestCoordinateSnappingFeature:
     def test_snap_within_200m_campus_center(self, client):
         """T1-SNP-05: Coordinates 150m from center successfully snap to nearest node."""
         payload = {
-            "start_lat": 17.66010,
-            "start_lon": 75.90620,
+            "start_lat": 15.880762,
+            "start_lon": 74.519112,
             "destination_node_id": 5
         }
         response = client.post("/api/routes", json=payload)

@@ -56,10 +56,10 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
 
-    # Campus Geography Defaults (Apex Institute of Technology)
-    CAMPUS_NAME: str = "Apex Institute of Technology"
-    CAMPUS_CENTER_LAT: float = 17.659900
-    CAMPUS_CENTER_LON: float = 75.906400
+    # Campus Geography Defaults (S G Balekundri Institute of Technology, Belagavi - VGJ9+6P)
+    CAMPUS_NAME: str = "S G Balekundri Institute of Technology, Belagavi"
+    CAMPUS_CENTER_LAT: float = 15.880562
+    CAMPUS_CENTER_LON: float = 74.519312
     CAMPUS_MAX_SNAPPING_METERS: float = 300.0
     NOMINAL_WALKING_SPEED_MPS: float = 1.3
     ACCESSIBLE_WALKING_SPEED_MPS: float = 1.0

@@ -59,8 +59,8 @@ describe('geoUtils — Spatial Distance & Geolocation Stress Tests', () => {
   });
 
   it('should evaluate user within 300m radius as NOT off-campus', () => {
-    // Admin complex entrance (node 1): 17.659910, 75.906420 (~2.4m from center)
-    const res = isUserOffCampus(17.659910, 75.906420, 300);
+    // SGBIT Admin entrance: ~2.4m from center
+    const res = isUserOffCampus(CAMPUS_CENTER.lat + 0.00002, CAMPUS_CENTER.lon + 0.00002, 300);
     assert.strictEqual(res.offCampus, false);
     assert.ok(res.distance < 5.0, `Expected <5m, got ${res.distance}`);
   });
@@ -72,17 +72,17 @@ describe('geoUtils — Spatial Distance & Geolocation Stress Tests', () => {
   });
 
   it('should evaluate user far away (>300m) as off-campus', () => {
-    // Off-campus point: 17.6800, 75.9200 (~2.6km away)
-    const res = isUserOffCampus(17.6800, 75.9200, 300);
+    // Off-campus point: ~3km away from SGBIT
+    const res = isUserOffCampus(15.9100, 74.5500, 300);
     assert.strictEqual(res.offCampus, true);
     assert.ok(res.distance > 2000, `Expected >2000m, got ${res.distance}`);
   });
 
   it('should respect custom threshold parameters in isUserOffCampus', () => {
-    const lat = 17.660800;
-    const lon = 75.907300; // ~136m from center
+    const lat = CAMPUS_CENTER.lat + 0.001;
+    const lon = CAMPUS_CENTER.lon + 0.001; // ~150m from center
     const tight = isUserOffCampus(lat, lon, 50);
-    const generous = isUserOffCampus(lat, lon, 200);
+    const generous = isUserOffCampus(lat, lon, 250);
     assert.strictEqual(tight.offCampus, true);
     assert.strictEqual(generous.offCampus, false);
   });

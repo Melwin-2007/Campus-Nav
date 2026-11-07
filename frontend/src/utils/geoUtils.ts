@@ -3,14 +3,14 @@
  */
 
 export const CAMPUS_CENTER = {
-  lat: 17.6599,
-  lon: 75.9064,
-  zoom: 16,
+  lat: 15.880562,
+  lon: 74.519312,
+  zoom: 17,
 };
 
 export const CAMPUS_BOUNDS = {
-  southWest: [17.655, 75.901] as [number, number],
-  northEast: [17.666, 75.912] as [number, number],
+  southWest: [15.875, 74.513] as [number, number],
+  northEast: [15.886, 74.526] as [number, number],
 };
 
 /**

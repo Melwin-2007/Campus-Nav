@@ -170,10 +170,10 @@ def admin_auth_headers(client: ResilientTestClient, admin_credentials: Dict[str,
 def campus_seed_inventory() -> Dict[str, Any]:
     """Authoritative inventory of seeded campus entities and topological benchmarks."""
     return {
-        "center": {"lat": 17.659900, "lon": 75.906400},
+        "center": {"lat": 15.880562, "lon": 74.519312},
         "bounds": {
-            "min_lat": 17.6560, "max_lat": 17.6640,
-            "min_lon": 75.9020, "max_lon": 75.9110
+            "min_lat": 15.8750, "max_lat": 15.8860,
+            "min_lon": 74.5130, "max_lon": 74.5260
         },
         "canonical_categories": [
             "Academic Buildings", "Departments", "Laboratories", "Administration",

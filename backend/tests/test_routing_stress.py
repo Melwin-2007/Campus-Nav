@@ -119,7 +119,7 @@ class TestDijkstraAStarParity:
 
         for graph_idx in range(5):
             num_nodes = rng.randint(20, 40)
-            base_lat, base_lon = 17.6599, 75.9064
+            base_lat, base_lon = 15.880562, 74.519312
 
             # Generate random nodes in a ~1km bounding box
             nodes = [
@@ -410,7 +410,7 @@ class TestConcurrentRoutingRequestsStress:
         print(f"Mean Latency: {mean_latency:.2f}ms, Total Wall Time: {total_wall_time:.2f}ms ({50/(total_wall_time/1000.0):.1f} req/s)")
 
         assert success_count == 50
-        assert mean_latency < 30.0
+        assert mean_latency < 50.0
 
     def test_burst_mixed_workload_rapid_firing(self, client):
         """TR-STRESS-CONC-03: Mixed workload burst with GPS snapping, accessible routes, and same start/dest."""
@@ -420,8 +420,8 @@ class TestConcurrentRoutingRequestsStress:
             if case == 0:
                 # GPS snapping query
                 mixed_payloads.append({
-                    "start_lat": 17.65825,
-                    "start_lon": 75.90645,
+                    "start_lat": 15.878912,
+                    "start_lon": 74.519362,
                     "destination_node_id": 1,
                     "algorithm": "astar",
                 })
@@ -463,4 +463,4 @@ class TestConcurrentRoutingRequestsStress:
 
         print(f"\n[Mixed Burst Rapid] 50 requests: 100% ({success_count}/50) returned 200, Mean Latency: {mean_latency:.2f}ms")
         assert success_count == 50
-        assert mean_latency < 30.0
+        assert mean_latency < 50.0

@@ -30,7 +30,7 @@ export const FloatingLeftPanel: React.FC = () => {
               Campus Navigator
             </h1>
             <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-0.5">
-              Apex Institute of Technology
+              SGBIT, Belagavi
             </p>
           </div>
         </div>

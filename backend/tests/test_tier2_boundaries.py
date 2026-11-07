@@ -67,20 +67,20 @@ class TestGPSOutsideBoundary:
     """Boundary 2: GPS Snapping Outside 300m Maximum Radius."""
 
     def test_gps_far_north_outside_campus(self, client):
-        """T2-BND-GPS-01: GPS point 2km north (lat 17.6800, lon 75.9200) returns HTTP 400 Bad Request."""
-        payload = {"start_lat": 17.6800, "start_lon": 75.9200, "destination_node_id": 1}
+        """T2-BND-GPS-01: GPS point 2km north (lat 15.900662, lon 74.532912) returns HTTP 400 Bad Request."""
+        payload = {"start_lat": 15.900662, "start_lon": 74.532912, "destination_node_id": 1}
         response = client.post("/api/routes", json=payload)
         assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.text}"
 
     def test_destination_gps_outside_campus(self, client):
         """T2-BND-GPS-02: Destination GPS coordinates far outside campus returns HTTP 400."""
-        payload = {"start_node_id": 1, "destination_lat": 17.6800, "destination_lon": 75.9200}
+        payload = {"start_node_id": 1, "destination_lat": 15.900662, "destination_lon": 74.532912}
         response = client.post("/api/routes", json=payload)
         assert response.status_code == 400
 
     def test_off_campus_error_message_mentions_boundary(self, client):
         """T2-BND-GPS-03: Error response body explicitly mentions campus boundary or >300m constraint."""
-        payload = {"start_lat": 17.6800, "start_lon": 75.9200, "destination_node_id": 1}
+        payload = {"start_lat": 15.900662, "start_lon": 74.532912, "destination_node_id": 1}
         response = client.post("/api/routes", json=payload)
         assert response.status_code == 400
         detail = str(response.json().get("detail", "")).lower()
@@ -95,7 +95,7 @@ class TestGPSOutsideBoundary:
     def test_threshold_snapping_distance_310m(self, client):
         """T2-BND-GPS-05: Point approximately 310m outside campus node rejected with HTTP 400."""
         # 0.003 degrees latitude is approx 333m
-        payload = {"start_lat": 17.6599 + 0.003, "start_lon": 75.9064, "destination_node_id": 1}
+        payload = {"start_lat": 15.880562 + 0.003, "start_lon": 74.519312, "destination_node_id": 1}
         response = client.post("/api/routes", json=payload)
         # Should be rejected with 400 if beyond 300m
         assert response.status_code in [400, 200]
@@ -277,7 +277,7 @@ class TestNegativeDistancesAndGeometryBoundary:
         payload = {
             "name": "Invalid Latitude Node",
             "latitude": 95.0,
-            "longitude": 75.9064,
+            "longitude": 74.519312,
             "floor": 0
         }
         response = client.post("/api/admin/nodes", json=payload, headers=admin_auth_headers)

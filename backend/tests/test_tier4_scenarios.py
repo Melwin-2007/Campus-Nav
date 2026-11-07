@@ -162,8 +162,8 @@ class TestRealWorldApplicationScenarios:
             # 1. Admin creates event node
             node_res = client.post("/api/admin/nodes", json={
                 "name": f"Event Pavilion Node {stamp}",
-                "latitude": 17.66100,
-                "longitude": 75.90650,
+                "latitude": 15.881662,
+                "longitude": 74.519412,
                 "floor": 0,
                 "node_type": "landmark",
                 "is_accessible": True,
@@ -193,8 +193,8 @@ class TestRealWorldApplicationScenarios:
                     "category_id": 12,
                     "description": "University recruitment drive and company booths.",
                     "department": "Career Services",
-                    "latitude": 17.66100,
-                    "longitude": 75.90650,
+                    "latitude": 15.881662,
+                    "longitude": 74.519412,
                     "entrance_node_id": created_node,
                     "opening_hours": "10:00 - 17:00",
                     "facilities": ["Wi-Fi", "Accessible Stalls"],

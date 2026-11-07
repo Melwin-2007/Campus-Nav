@@ -158,8 +158,8 @@ export const MapView: React.FC = () => {
         console.warn('Geolocation error:', err);
         // Fallback demo location within campus perimeter
         const fallbackLoc = {
-          latitude: 17.6595,
-          longitude: 75.9062,
+          latitude: CAMPUS_CENTER.lat,
+          longitude: CAMPUS_CENTER.lon,
           accuracy: 15,
           timestamp: Date.now(),
         };
