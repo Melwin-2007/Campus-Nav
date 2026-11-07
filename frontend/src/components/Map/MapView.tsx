@@ -28,11 +28,10 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 
-// Tile URL templates
-const CARTO_LIGHT_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-const CARTO_DARK_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+// Tile URL templates - standard OpenStreetMap (100% free, zero API keys required)
+const OSM_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors';
 
 // Map controller sub-component for dynamic camera movements and resize invalidation
 interface MapControllerProps {
@@ -188,11 +187,11 @@ export const MapView: React.FC = () => {
         zoomControl={false}
         className="w-full h-full z-0"
       >
-        {/* Dynamic Tile Layer according to dark/light theme */}
+        {/* OpenStreetMap Tile Layer (100% free, zero API key) */}
         <TileLayer
-          key={isDark ? 'carto-dark' : 'carto-light'}
-          url={isDark ? CARTO_DARK_URL : CARTO_LIGHT_URL}
-          subdomains={['a', 'b', 'c', 'd']}
+          key={isDark ? 'osm-dark' : 'osm-light'}
+          url={OSM_TILE_URL}
+          subdomains={['a', 'b', 'c']}
           attribution={TILE_ATTRIBUTION}
           maxZoom={19}
         />

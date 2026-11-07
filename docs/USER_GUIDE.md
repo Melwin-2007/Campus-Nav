@@ -72,3 +72,4 @@ Campus buildings have QR code posters posted at their main entrances.
 ## 6. Light and Dark Modes
 
 Tap the **Sun / Moon** icon in the top-right toolbar to toggle between clean day mode and high-contrast dark mode for night-time navigation.
+

@@ -110,3 +110,4 @@ dist/assets/index-BCtRc1lB.js   1,005.71 kB │ gzip: 306.05 kB
 3. **CORS Boundary Enforcement**: FastAPI CORS middleware restricts origin access to localhost development ports and configurable production URLs.
 4. **File Upload Hardening**: Photo upload endpoints validate MIME types (`image/jpeg`, `image/png`, `image/webp`) and enforce a strict 5 MB file size limit.
 5. **No Broken Images or Missing Assets**: Graceful SVG fallbacks and category placeholder icons are supplied for every POI without an uploaded photograph.
+

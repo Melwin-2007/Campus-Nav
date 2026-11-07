@@ -113,3 +113,4 @@ Open `http://localhost:5173` in your browser (Chrome, Edge, or Brave).
    - Enter **Add Node** mode and drop a point on the map.
    - Enter **Link Nodes** mode and connect two nodes with a ramp.
    - Drag a node marker across the screen to demonstrate real-time graph reactivity.
+

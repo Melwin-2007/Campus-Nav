@@ -165,6 +165,11 @@
   background: #0B1120;
 }
 
+/* Zero-watermark Dark Mode for OpenStreetMap tiles */
+.dark .leaflet-tile-pane {
+  filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+}
+
 .leaflet-control-zoom {
   border: none !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;

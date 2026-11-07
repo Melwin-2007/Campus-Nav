@@ -97,3 +97,4 @@ The Campus Navigator system successfully demonstrates that comprehensive, access
 - **Multi-Floor Indoor Wayfinding**: Aligning layered SVG floorplans to support room-level routing.
 - **Live Transit Integration**: Incorporating real-time campus shuttle tracking.
 - **Voice Navigation**: Integrating Web Speech API text-to-speech for audible turn-by-turn guidance.
+

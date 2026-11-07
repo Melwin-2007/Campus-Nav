@@ -68,6 +68,10 @@ backend/*.db
 backend/*.sqlite
 backend/*.sqlite3
 campus_navigator.db
+campus_navigator.db-shm
+campus_navigator.db-wal
+*.db-shm
+*.db-wal
 
 # OS / Editor artifacts
 .DS_Store

@@ -137,3 +137,4 @@ Provides secure credentials for the visual graph editor and administrative studi
 - `username`: Unique string.
 - `hashed_password`: Passlib bcrypt-hashed password (12 rounds).
 - `is_active`: Boolean flag.
+

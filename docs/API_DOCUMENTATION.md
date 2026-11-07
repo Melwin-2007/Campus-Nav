@@ -213,3 +213,4 @@ Public endpoints require no authentication.
 - `POST /api/admin/edges`: Create a walkable edge between two nodes.
 - `DELETE /api/admin/edges/{id}`: Remove an edge.
 *(Note: Any node or edge mutation automatically invalidates and refreshes the in-memory routing graph cache).*
+
