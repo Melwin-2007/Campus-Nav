@@ -24,3 +24,4 @@ cd ../backend
 python -m app.seed.seeder
 
 echo "==> Build finished successfully!"
+

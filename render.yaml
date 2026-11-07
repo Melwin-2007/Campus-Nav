@@ -24,3 +24,4 @@ services:
         value: admin
       - key: ADMIN_DEFAULT_PASSWORD
         value: admin123
+
