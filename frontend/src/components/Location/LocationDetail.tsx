@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Navigation,
   MapPin,
@@ -25,6 +25,10 @@ export const LocationDetail: React.FC<LocationDetailProps> = ({ location, onClos
   const [imageError, setImageError] = useState(false);
   const [copiedCoords, setCopiedCoords] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [location.id, location.photo_url]);
 
   const operatingStatus = useMemo(() => {
     return evaluateOperatingHours(location.opening_hours);

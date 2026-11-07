@@ -44,10 +44,53 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Static file serving for uploads
+# Static file serving for uploads and images
 static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 os.makedirs(os.path.join(static_dir, "uploads"), exist_ok=True)
+os.makedirs(os.path.join(static_dir, "images"), exist_ok=True)
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+# Image resolution directories in priority order
+IMAGE_DIRS = [
+    os.path.join(static_dir, "images"),
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "public", "images")),
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist", "images")),
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "images")),
+]
+
+
+@app.get("/images/{image_name:path}", tags=["Images"], include_in_schema=False)
+async def get_campus_image(image_name: str):
+    """Case-insensitive static image resolver for campus POI photos across platforms."""
+    target_clean = os.path.basename(image_name).lower().strip()
+    target_normalized = target_clean.replace(" ", "_")
+
+    for d in IMAGE_DIRS:
+        if not os.path.exists(d):
+            continue
+        # 1. Exact match
+        exact_path = os.path.join(d, image_name)
+        if os.path.exists(exact_path) and os.path.isfile(exact_path):
+            return FileResponse(exact_path)
+
+        # 2. Case-insensitive and whitespace-normalized match
+        try:
+            for fname in os.listdir(d):
+                clean_fname = fname.lower().strip()
+                normalized_fname = clean_fname.replace(" ", "_")
+                if (
+                    clean_fname == target_clean
+                    or normalized_fname == target_normalized
+                    or normalized_fname.split(".")[0] == target_normalized.split(".")[0]
+                ):
+                    matched_file = os.path.join(d, fname)
+                    if os.path.isfile(matched_file):
+                        return FileResponse(matched_file)
+        except Exception:
+            continue
+
+    raise HTTPException(status_code=404, detail=f"Image '{image_name}' not found.")
+
 
 # Mount API Routers under /api
 app.include_router(health_router, prefix=settings.API_PREFIX)
@@ -73,10 +116,6 @@ if os.path.exists(frontend_dist):
     assets_dir = os.path.join(frontend_dist, "assets")
     if os.path.exists(assets_dir):
         app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
-
-    images_dir = os.path.join(frontend_dist, "images")
-    if os.path.exists(images_dir):
-        app.mount("/images", StaticFiles(directory=images_dir), name="frontend_images")
 
     @app.get("/{full_path:path}", include_in_schema=False)
     async def serve_spa(full_path: str):
