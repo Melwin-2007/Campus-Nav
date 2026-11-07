@@ -9,6 +9,8 @@ interface CategoryMarkerProps {
   location: Location;
   isSelected: boolean;
   onSelect: (location: Location) => void;
+  isDraggable?: boolean;
+  onDragEnd?: (location: Location, lat: number, lon: number) => void;
 }
 
 // Memory cache for generated divIcons to avoid recreating DOM strings
@@ -54,6 +56,8 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
   location,
   isSelected,
   onSelect,
+  isDraggable = false,
+  onDragEnd,
 }) => {
   const icon = useMemo(() => {
     const color = location.category?.color || '#4F46E5';
@@ -65,9 +69,17 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
     <Marker
       position={[location.latitude, location.longitude]}
       icon={icon}
+      draggable={isDraggable}
       zIndexOffset={isSelected ? 1000 : 100}
       eventHandlers={{
         click: () => onSelect(location),
+        dragend: (e) => {
+          const marker = e.target;
+          const newLatLng = marker.getLatLng();
+          if (onDragEnd) {
+            onDragEnd(location, newLatLng.lat, newLatLng.lng);
+          }
+        },
       }}
     >
       <Tooltip direction="top" offset={[0, isSelected ? -56 : -44]} opacity={0.95}>

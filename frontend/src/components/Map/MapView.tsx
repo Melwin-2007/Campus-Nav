@@ -120,6 +120,7 @@ export const MapView: React.FC = () => {
     setSelectedLocation,
     setFlyToTarget,
     setUserLocation,
+    refreshData,
   } = useNavigation();
 
   // Filter locations by selected category
@@ -134,6 +135,22 @@ export const MapView: React.FC = () => {
       setSelectedLocation(location);
     },
     [setSelectedLocation]
+  );
+
+  // Handle location marker drag in admin mode
+  const handleLocationDragEnd = useCallback(
+    async (loc: Location, newLat: number, newLon: number) => {
+      try {
+        await api.locations.update(loc.id, {
+          latitude: newLat,
+          longitude: newLon,
+        });
+        await refreshData();
+      } catch (err) {
+        console.error('Failed to update location coordinates:', err);
+      }
+    },
+    [refreshData]
   );
 
   // Trigger GPS Geolocation
@@ -213,6 +230,8 @@ export const MapView: React.FC = () => {
             location={loc}
             isSelected={selectedLocation?.id === loc.id}
             onSelect={handleSelectLocation}
+            isDraggable={isAdminMode}
+            onDragEnd={handleLocationDragEnd}
           />
         ))}
 
