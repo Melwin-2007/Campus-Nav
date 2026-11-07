@@ -60,14 +60,41 @@ Open `http://localhost:5173` in your browser.
 
 ---
 
-## 🧪 Automated Testing
-Run the automated test suite:
+## 📚 Documentation Suite
+
+Comprehensive project documentation is available in the [`docs/`](file:///e:/Campus-Nav/docs) directory:
+- [**User Guide**](file:///e:/Campus-Nav/docs/USER_GUIDE.md): Plain-English guide for finding places, directions, accessible routing, GPS tracking, and QR codes.
+- [**Administrator Guide**](file:///e:/Campus-Nav/docs/ADMIN_GUIDE.md): How to use the Visual Map Graph Editor, manage locations, upload photos, and print QR posters.
+- [**REST API Documentation**](file:///e:/Campus-Nav/docs/API_DOCUMENTATION.md): Complete catalog of public and admin API endpoints with request/response schemas.
+- [**System Architecture & Diagrams**](file:///e:/Campus-Nav/docs/ARCHITECTURE.md): Architecture diagrams, navigation flow sequence charts, and mathematical formulas.
+- [**Database Schema Reference**](file:///e:/Campus-Nav/docs/DATABASE_SCHEMA.md): Entity-relationship diagrams, table models, and relational constraints.
+- [**Production Deployment Guide**](file:///e:/Campus-Nav/docs/DEPLOYMENT_GUIDE.md): Cloud hosting steps (Vercel, Render, Neon/Supabase), environment variables, and laptop demo guide.
+- [**Project Report Outline**](file:///e:/Campus-Nav/docs/PROJECT_REPORT.md): Academic capstone report format suitable for university submission.
+- [**Full Verification Test Report**](file:///e:/Campus-Nav/TEST_REPORT.md): Audit table verifying all acceptance criteria against test evidence.
+
+---
+
+## 🧪 Automated Testing & Build Verification
+
+### Backend Automated Test Suite (299 Tests)
 ```powershell
 cd backend
-.\.venv\Scripts\pytest -v
+.\.venv\Scripts\pytest -q
+```
+
+### Frontend Automated Unit Tests (92 Tests)
+```powershell
+cd frontend
+npx tsx --test src/utils/__tests__/*.test.ts
+```
+
+### Frontend Production Build
+```powershell
+cd frontend
+npm run build
 ```
 
 ---
 
 ## 📄 License
-Educational and portfolio showcase application.
+Educational, campus showcase, and portfolio demonstration platform.
