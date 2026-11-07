@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { Polyline, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
-import { useAdminGraph } from '../../context/AdminGraphContext';
-import { PathEdge } from '../../types';
+import { useAdminGraph } from '../../../context/AdminGraphContext';
+import { PathEdge, PathNode } from '../../../types';
 
 interface EdgeStyle {
   color: string;
@@ -34,7 +34,7 @@ export const GraphEdgesLayer: React.FC = () => {
   // Fast node lookup
   const nodeMap = useMemo(() => {
     const map = new Map<number, { lat: number; lng: number }>();
-    nodes.forEach((n) => map.set(n.id, { lat: n.latitude, lng: n.longitude }));
+    nodes.forEach((n: PathNode) => map.set(n.id, { lat: n.latitude, lng: n.longitude }));
     return map;
   }, [nodes]);
 
@@ -42,7 +42,7 @@ export const GraphEdgesLayer: React.FC = () => {
 
   return (
     <>
-      {edges.map((edge) => {
+      {edges.map((edge: PathEdge) => {
         if (layerVisibility.filterEdgeType && edge.edge_type !== layerVisibility.filterEdgeType) {
           return null;
         }

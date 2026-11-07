@@ -80,3 +80,6 @@ Thumbs.db
 
 # Teamwork agent metadata
 .agents/
+
+# Uploaded media from tests
+backend/app/static/uploads/*.png

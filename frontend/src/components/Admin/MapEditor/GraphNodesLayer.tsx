@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { Marker, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
-import { useAdminGraph } from '../../context/AdminGraphContext';
-import { PathNode } from '../../types';
+import { useAdminGraph } from '../../../context/AdminGraphContext';
+import { PathNode, PathEdge } from '../../../types';
 
 const NODE_COLORS: Record<string, string> = {
   entrance: '#10B981', // Emerald
@@ -86,7 +86,7 @@ export const GraphNodesLayer: React.FC = () => {
   // Find set of connected node IDs to identify isolated nodes
   const connectedNodeIds = useMemo(() => {
     const set = new Set<number>();
-    edges.forEach((e) => {
+    edges.forEach((e: PathEdge) => {
       set.add(e.from_node_id);
       set.add(e.to_node_id);
     });
@@ -97,7 +97,7 @@ export const GraphNodesLayer: React.FC = () => {
 
   return (
     <>
-      {nodes.map((node) => {
+      {nodes.map((node: PathNode) => {
         const isSelected = selectedNode?.id === node.id;
         const isLinkingSource = linkingSourceNode?.id === node.id;
         const isIsolated = !connectedNodeIds.has(node.id);
@@ -114,7 +114,7 @@ export const GraphNodesLayer: React.FC = () => {
             draggable={activeTool === 'inspect'}
             icon={createMarkerDivIcon(node, isSelected, isLinkingSource, isIsolated)}
             eventHandlers={{
-              click: (e) => {
+              click: (e: L.LeafletMouseEvent) => {
                 L.DomEvent.stopPropagation(e);
                 if (activeTool === 'link_nodes') {
                   handleNodeClickForLinking(node);
@@ -123,12 +123,12 @@ export const GraphNodesLayer: React.FC = () => {
                   setSelectedEdge(null);
                 }
               },
-              drag: (e) => {
+              drag: (e: L.LeafletEvent) => {
                 const marker = e.target as L.Marker;
                 const latlng = marker.getLatLng();
                 setDraggedPosition(node.id, { lat: latlng.lat, lng: latlng.lng });
               },
-              dragend: (e) => {
+              dragend: (e: L.LeafletEvent) => {
                 const marker = e.target as L.Marker;
                 const latlng = marker.getLatLng();
                 commitNodePosition(node.id, latlng.lat, latlng.lng);
