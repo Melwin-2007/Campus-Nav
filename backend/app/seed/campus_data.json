@@ -164,7 +164,7 @@
     },
     {
       "id": 4,
-      "name": "Civil Engineering Department",
+      "name": "Department Section",
       "latitude": 15.88128817822314,
       "longitude": 74.51838567778258,
       "floor": 0,
@@ -348,14 +348,15 @@
     {
       "id": 3,
       "category_id": 4,
-      "name": "Administrative Block",
-      "description": "Central administrative headquarters housing the Principal's Office, Dean Chambers, Governing Council Hall, and Examination Cell.",
+      "name": "Administrative Block (Ground Floor)",
+      "description": "Central administrative headquarters on Ground Floor housing the Principal's Office, Dean Chambers, Governing Council Hall, and Examination Cell.",
       "department": "Office of the Principal & Deans",
       "latitude": 15.880045224252227,
       "longitude": 74.51868572379905,
       "entrance_node_id": 3,
       "opening_hours": "08:30 - 17:30",
       "facilities": [
+        "Ground Floor",
         "Principal Office",
         "Council Boardroom",
         "Examination Cell",
@@ -369,19 +370,20 @@
     {
       "id": 4,
       "category_id": 2,
-      "name": "Civil Engineering Department",
-      "description": "Department of Civil Engineering with structural laboratories, surveying labs, seminar halls, and smart classrooms.",
-      "department": "Department of Civil Engineering",
+      "name": "Civil Engineering Department (Ground Floor)",
+      "description": "Department of Civil Engineering located on the Ground Floor of the Department Section. Equipped with structural laboratories, surveying labs, concrete testing, and smart classrooms.",
+      "department": "Civil Engineering Department",
       "latitude": 15.88128817822314,
       "longitude": 74.51838567778258,
       "entrance_node_id": 4,
       "opening_hours": "08:00 - 17:00",
       "facilities": [
+        "Ground Floor",
         "Surveying Lab",
         "Strength of Materials Lab",
         "Concrete Technology Lab",
         "Seminar Hall",
-        "Digital Classrooms",
+        "Smart Classrooms",
         "Wi-Fi"
       ],
       "photo_url": "/images/civil_department.jpeg",
@@ -446,6 +448,90 @@
         "EV Charging"
       ],
       "photo_url": "/images/parking.jpeg",
+      "is_active": true
+    },
+    {
+      "id": 8,
+      "category_id": 2,
+      "name": "Computer Science & Engineering Department (1st Floor)",
+      "description": "Department of Computer Science & Engineering located on the 1st Floor of the Department Section. Hub for software development, systems engineering, programming workshops, and modern faculty cabins.",
+      "department": "Computer Science & Engineering Department",
+      "latitude": 15.88133,
+      "longitude": 74.51838,
+      "entrance_node_id": 4,
+      "opening_hours": "08:00 - 17:30",
+      "facilities": [
+        "1st Floor",
+        "Software Engineering Lab",
+        "HOD Chamber",
+        "Faculty Offices",
+        "Smart Classrooms",
+        "Wi-Fi"
+      ],
+      "photo_url": "/images/cse_department.jpeg",
+      "is_active": true
+    },
+    {
+      "id": 9,
+      "category_id": 3,
+      "name": "CSE Advanced Laboratories (2nd Floor)",
+      "description": "Advanced Computing and Research Laboratories on the 2nd Floor of the Department Section. High-performance GPU systems for machine learning, artificial intelligence, cloud architectures, and project incubation.",
+      "department": "Computer Science & Engineering Department",
+      "latitude": 15.88126,
+      "longitude": 74.51842,
+      "entrance_node_id": 4,
+      "opening_hours": "08:00 - 18:00",
+      "facilities": [
+        "2nd Floor",
+        "AI/ML Lab",
+        "Systems Programming Lab",
+        "Cloud Computing Lab",
+        "Research Workstations",
+        "Wi-Fi"
+      ],
+      "photo_url": "/images/cse_lab.jpeg",
+      "is_active": true
+    },
+    {
+      "id": 10,
+      "category_id": 2,
+      "name": "Computer Science and Business Studies (CSBS) (4th Floor)",
+      "description": "Department of Computer Science and Business Studies (CSBS) located on the 4th Floor of the Department Section. Cutting-edge interdisciplinary curriculum blending enterprise software development with business analytics and finance.",
+      "department": "Computer Science & Business Studies (CSBS)",
+      "latitude": 15.88131,
+      "longitude": 74.51845,
+      "entrance_node_id": 4,
+      "opening_hours": "08:00 - 17:00",
+      "facilities": [
+        "4th Floor",
+        "Business Analytics Lab",
+        "Enterprise Systems Lab",
+        "Seminar Hall",
+        "Digital Classrooms",
+        "Wi-Fi"
+      ],
+      "photo_url": "/images/csbs_department.jpeg",
+      "is_active": true
+    },
+    {
+      "id": 11,
+      "category_id": 2,
+      "name": "Artificial Intelligence and Data Science (AI & DS) (1st Floor)",
+      "description": "Department of Artificial Intelligence and Data Science located on the 1st Floor of the Administrative Block. Premier center for deep learning research, intelligent systems, data engineering, and modern smart classrooms.",
+      "department": "Artificial Intelligence & Data Science (AI & DS)",
+      "latitude": 15.88009,
+      "longitude": 74.51872,
+      "entrance_node_id": 3,
+      "opening_hours": "08:00 - 17:30",
+      "facilities": [
+        "1st Floor",
+        "Data Science Lab",
+        "Deep Learning R&D Lab",
+        "Smart Classrooms",
+        "Faculty Cabins",
+        "Wi-Fi"
+      ],
+      "photo_url": "/images/aids_department.jpeg",
       "is_active": true
     }
   ]

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Compass, Navigation, MapPin, ArrowLeft, ShieldCheck } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { Compass, Navigation, MapPin, ArrowLeft, ShieldCheck, Building2 } from 'lucide-react';
 import { useNavigation } from '../../context/NavigationContext';
 import { SearchBar } from '../Search/SearchBar';
 import { CategoryChips } from '../Categories/CategoryChips';
@@ -14,8 +14,22 @@ export const FloatingLeftPanel: React.FC = () => {
     isDirectionsMode,
     setIsDirectionsMode,
     locations,
+    categories,
+    selectedCategoryId,
     startDirectionsTo,
   } = useNavigation();
+
+  // Active category object if filtered
+  const activeCategory = useMemo(() => {
+    if (!selectedCategoryId) return null;
+    return categories.find((c) => c.id === selectedCategoryId) || null;
+  }, [selectedCategoryId, categories]);
+
+  // Filtered locations based on category chip
+  const displayedLocations = useMemo(() => {
+    if (!selectedCategoryId) return locations;
+    return locations.filter((loc) => loc.category_id === selectedCategoryId);
+  }, [locations, selectedCategoryId]);
 
   return (
     <aside className="hidden md:flex fixed top-4 left-4 bottom-4 w-[420px] max-w-[calc(100vw-32px)] z-30 flex-col glass-panel shadow-floating border border-slate-200/80 dark:border-slate-800/80 rounded-3xl overflow-hidden backdrop-blur-xl">
@@ -86,54 +100,87 @@ export const FloatingLeftPanel: React.FC = () => {
             <LocationDetail location={selectedLocation} />
           </div>
         ) : (
-          /* State C: Campus Overview & Featured Locations */
+          /* State C: Campus Overview & Filtered Locations */
           <div className="flex flex-col gap-4">
-            <div>
-              <h3 className="font-heading font-bold text-sm text-slate-800 dark:text-slate-100">
-                Explore Campus
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Click any building marker on the map or select from popular destinations below.
-              </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-heading font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                  {activeCategory ? (
+                    <>
+                      <Building2 size={15} style={{ color: activeCategory.color }} />
+                      <span>{activeCategory.name}</span>
+                    </>
+                  ) : (
+                    <span>Explore Campus</span>
+                  )}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  {activeCategory
+                    ? `${displayedLocations.length} locations in this section`
+                    : 'Click any building marker or choose from the list below.'}
+                </p>
+              </div>
+
+              {selectedCategoryId && (
+                <span
+                  className="px-2 py-0.5 rounded-full text-[10px] font-bold text-white shadow-sm"
+                  style={{ backgroundColor: activeCategory?.color || '#4F46E5' }}
+                >
+                  Filtered
+                </span>
+              )}
             </div>
 
-            {/* Featured Locations List */}
+            {/* Displayed Locations List */}
             <div className="flex flex-col gap-2">
-              {locations.slice(0, 7).map((loc) => (
-                <div
-                  key={loc.id}
-                  onClick={() => setSelectedLocation(loc)}
-                  className="p-3 rounded-2xl glass-card hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-all flex items-center justify-between group"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div
-                      className="w-8 h-8 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm"
-                      style={{ backgroundColor: loc.category?.color || '#4F46E5' }}
-                    >
-                      <MapPin size={16} />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-heading font-semibold text-xs text-slate-800 dark:text-slate-100 truncate group-hover:text-brand-indigo dark:group-hover:text-brand-teal transition-colors">
-                        {loc.name}
-                      </p>
-                      <p className="text-[11px] text-slate-400 truncate">
-                        {loc.department || loc.category?.name}
-                      </p>
-                    </div>
-                  </div>
+              {displayedLocations.map((loc) => {
+                const floorTag = loc.facilities?.find((f) => f.includes('Floor'));
 
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      startDirectionsTo(loc);
-                    }}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-brand-indigo hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors shrink-0"
-                    title="Directions"
+                return (
+                  <div
+                    key={loc.id}
+                    onClick={() => setSelectedLocation(loc)}
+                    className="p-3 rounded-2xl glass-card hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-all flex items-center justify-between group"
                   >
-                    <Navigation size={15} />
-                  </button>
-                </div>
-              ))}
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div
+                        className="w-9 h-9 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm"
+                        style={{ backgroundColor: loc.category?.color || '#4F46E5' }}
+                      >
+                        <MapPin size={17} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <p className="font-heading font-semibold text-xs text-slate-800 dark:text-slate-100 truncate group-hover:text-brand-indigo dark:group-hover:text-brand-teal transition-colors">
+                            {loc.name}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          {floorTag && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 shrink-0">
+                              {floorTag}
+                            </span>
+                          )}
+                          <p className="text-[11px] text-slate-400 truncate">
+                            {loc.department || loc.category?.name}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        startDirectionsTo(loc);
+                      }}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-brand-indigo hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors shrink-0"
+                      title="Directions"
+                    >
+                      <Navigation size={15} />
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

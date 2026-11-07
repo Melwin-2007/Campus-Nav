@@ -36,7 +36,12 @@ const MainLayout: React.FC = () => {
     setBottomSheetSnap,
     setFlyToTarget,
     locations,
+    selectedCategoryId,
   } = useNavigation();
+
+  const displayedMobileLocations = selectedCategoryId
+    ? locations.filter((loc) => loc.category_id === selectedCategoryId)
+    : locations;
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-slate-50 dark:bg-midnight select-none">
@@ -95,7 +100,7 @@ const MainLayout: React.FC = () => {
 
             {/* Quick horizontal preview list */}
             <div className="flex gap-2 overflow-x-auto no-scrollbar py-2">
-              {locations.slice(0, 6).map((loc) => (
+              {displayedMobileLocations.map((loc) => (
                 <div
                   key={loc.id}
                   onClick={() => {

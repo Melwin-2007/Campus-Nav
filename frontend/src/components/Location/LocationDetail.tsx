@@ -9,6 +9,8 @@ import {
   Check,
   Building,
   DoorOpen,
+  Layers,
+  ChevronRight,
 } from 'lucide-react';
 import { Location } from '../../types';
 import { useNavigation } from '../../context/NavigationContext';
@@ -21,7 +23,7 @@ interface LocationDetailProps {
 }
 
 export const LocationDetail: React.FC<LocationDetailProps> = ({ location, onClose }) => {
-  const { setSelectedLocation, startDirectionsTo, startDirectionsFrom } = useNavigation();
+  const { setSelectedLocation, startDirectionsTo, startDirectionsFrom, locations } = useNavigation();
   const [imageError, setImageError] = useState(false);
   const [copiedCoords, setCopiedCoords] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -33,6 +35,18 @@ export const LocationDetail: React.FC<LocationDetailProps> = ({ location, onClos
   const operatingStatus = useMemo(() => {
     return evaluateOperatingHours(location.opening_hours);
   }, [location.opening_hours]);
+
+  // Find all departments / facilities in the same building (sharing entrance_node_id)
+  const buildingLocations = useMemo(() => {
+    if (!location.entrance_node_id) return [];
+    return locations.filter((loc) => loc.entrance_node_id === location.entrance_node_id);
+  }, [location.entrance_node_id, locations]);
+
+  const buildingName = useMemo(() => {
+    if (location.entrance_node_id === 4) return 'Department Section Building';
+    if (location.entrance_node_id === 3) return 'Administrative Block';
+    return location.entrance_node?.name || 'Building';
+  }, [location.entrance_node_id, location.entrance_node]);
 
   const CategoryIcon = getCategoryIconComponent(location.category?.icon || 'MapPin');
   const categoryColor = location.category?.color || '#4F46E5';
@@ -61,7 +75,7 @@ export const LocationDetail: React.FC<LocationDetailProps> = ({ location, onClos
   return (
     <div className="w-full flex flex-col overflow-y-auto no-scrollbar">
       {/* Hero Media Container with Image or Category Fallback */}
-      <div className="relative w-full h-44 sm:h-52 rounded-t-2xl sm:rounded-2xl overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800">
+      <div className="relative w-full h-48 sm:h-56 rounded-t-2xl sm:rounded-2xl overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800">
         {location.photo_url && !imageError ? (
           <img
             src={location.photo_url}
@@ -168,11 +182,74 @@ export const LocationDetail: React.FC<LocationDetailProps> = ({ location, onClos
           </p>
         )}
 
+        {/* Multi-floor Building Directory (Rendered when this building has other floors/departments) */}
+        {buildingLocations.length > 1 && (
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-purple-50/70 to-indigo-50/50 dark:from-purple-950/30 dark:to-indigo-950/20 border border-purple-200/80 dark:border-purple-800/60 flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-purple-900 dark:text-purple-200 flex items-center gap-1.5">
+                <Layers size={14} className="text-purple-600 dark:text-purple-400" />
+                <span>{buildingName} Directory</span>
+              </span>
+              <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold">
+                {buildingLocations.length} Floors
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              {buildingLocations.map((bLoc) => {
+                const isCurrent = bLoc.id === location.id;
+                const floorTag = bLoc.facilities.find((f) => f.includes('Floor')) || 'Floor';
+
+                return (
+                  <button
+                    key={bLoc.id}
+                    onClick={() => {
+                      if (!isCurrent) setSelectedLocation(bLoc);
+                    }}
+                    className={`w-full text-left p-2 rounded-xl transition-all flex items-center justify-between ${
+                      isCurrent
+                        ? 'bg-purple-600 text-white shadow-sm ring-1 ring-purple-500'
+                        : 'bg-white/90 dark:bg-slate-800/90 text-slate-800 dark:text-slate-200 hover:bg-purple-100/70 dark:hover:bg-purple-900/50 border border-purple-100 dark:border-purple-900/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
+                          isCurrent
+                            ? 'bg-white/20 text-white'
+                            : 'bg-purple-100 dark:bg-purple-900/80 text-purple-800 dark:text-purple-200'
+                        }`}
+                      >
+                        {floorTag}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold truncate leading-tight">
+                          {bLoc.name}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                      {isCurrent ? (
+                        <span className="text-[10px] font-bold bg-white/25 px-2 py-0.5 rounded-full text-white">
+                          Here
+                        </span>
+                      ) : (
+                        <ChevronRight size={13} className="text-purple-400 opacity-80" />
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Facilities Chips */}
         {location.facilities && location.facilities.length > 0 && (
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
-              Available Facilities
+              Available Facilities & Features
             </h3>
             <div className="flex flex-wrap gap-2">
               {location.facilities.map((fac, idx) => {
@@ -222,7 +299,7 @@ export const LocationDetail: React.FC<LocationDetailProps> = ({ location, onClos
         {location.entrance_node_id && (
           <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
             <DoorOpen size={13} className="text-brand-amber" />
-            <span>Navigational Entrance: Connected to Node #{location.entrance_node_id}</span>
+            <span>Campus Gateway: Connected to Entrance Node #{location.entrance_node_id}</span>
           </div>
         )}
 
