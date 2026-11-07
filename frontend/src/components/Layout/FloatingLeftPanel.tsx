@@ -77,7 +77,7 @@ export const FloatingLeftPanel: React.FC = () => {
             <Navigation size={18} />
           </button>
         </div>
-        <CategoryChips />
+        {!selectedLocation && !isDirectionsMode && !activeRoute && <CategoryChips />}
       </div>
 
       {/* Main Dynamic Panel Body */}

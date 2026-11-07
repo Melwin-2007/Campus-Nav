@@ -56,9 +56,11 @@ const MainLayout: React.FC = () => {
         <div className="pointer-events-auto">
           <SearchBar onOpenScanner={() => setIsScannerOpen(true)} />
         </div>
-        <div className="pointer-events-auto">
-          <CategoryChips />
-        </div>
+        {!selectedLocation && !isDirectionsMode && !activeRoute && (
+          <div className="pointer-events-auto">
+            <CategoryChips />
+          </div>
+        )}
         <div className="pointer-events-auto">
           <OffCampusBanner />
         </div>

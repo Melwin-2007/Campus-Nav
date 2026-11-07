@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Layers, Building2, ChevronRight, Sparkles } from 'lucide-react';
+import { Layers, Building2, FlaskConical, Landmark, ChevronDown, ChevronUp, MapPin, Sparkles } from 'lucide-react';
 import { useNavigation } from '../../context/NavigationContext';
 import { getCategoryIconComponent } from '../../utils/iconMapping';
 import { Location } from '../../types';
@@ -14,7 +14,7 @@ export const CategoryChips: React.FC = () => {
     selectedLocation,
   } = useNavigation();
 
-  const [selectedFloor, setSelectedFloor] = useState<string | null>(null);
+  const [showMoreFilters, setShowMoreFilters] = useState<boolean>(false);
 
   // Compute live location count per category
   const categoryCounts = useMemo(() => {
@@ -25,56 +25,49 @@ export const CategoryChips: React.FC = () => {
     return counts;
   }, [locations]);
 
-  // Sort and filter active categories (Departments first, followed by other categories with count > 0)
-  const visibleCategories = useMemo(() => {
-    const active = categories.filter((cat) => (categoryCounts[cat.id] || 0) > 0);
-    return active.sort((a, b) => {
-      // Prioritize Departments (ID 2 or slug 'departments') to the very top
-      if (a.id === 2 || a.slug === 'departments') return -1;
-      if (b.id === 2 || b.slug === 'departments') return 1;
-      // Prioritize Laboratories (ID 3) and Administration (ID 4) next
-      if (a.id === 3 && b.id !== 2) return -1;
-      if (b.id === 3 && a.id !== 2) return 1;
-      if (a.id === 4 && b.id !== 2 && b.id !== 3) return -1;
-      if (b.id === 4 && a.id !== 2 && a.id !== 3) return 1;
-      return (categoryCounts[b.id] || 0) - (categoryCounts[a.id] || 0);
+  // Primary categories: Departments (2), Laboratories (3), Administration (4)
+  const deptCategory = useMemo(() => categories.find((c) => c.id === 2 || c.slug === 'departments'), [categories]);
+  const labCategory = useMemo(() => categories.find((c) => c.id === 3 || c.slug === 'laboratories'), [categories]);
+  const adminCategory = useMemo(() => categories.find((c) => c.id === 4 || c.slug === 'administration'), [categories]);
+
+  // Secondary categories (amenities with count > 0)
+  const secondaryCategories = useMemo(() => {
+    return categories.filter((c) => {
+      const isPrimary = c.id === 2 || c.id === 3 || c.id === 4;
+      const count = categoryCounts[c.id] || 0;
+      return !isPrimary && count > 0;
     });
   }, [categories, categoryCounts]);
 
-  // Department locations (Category 2 + Laboratories Category 3)
+  // All Academic Departments & Laboratories for the dedicated directory
   const departmentLocations = useMemo(() => {
     return locations.filter((loc) => loc.category_id === 2 || loc.category_id === 3);
   }, [locations]);
 
-  // Handle clicking a specific department floor pill
-  const handleSelectDept = (loc: Location) => {
-    setSelectedLocation(loc);
-  };
-
-  const isDepartmentsActive = selectedCategoryId === 2;
+  const isDepartmentsSelected = selectedCategoryId === 2;
 
   return (
-    <div className="w-full flex flex-col gap-1.5 py-1 select-none">
-      {/* Primary Category Filter Bar */}
-      <div className="w-full overflow-x-auto no-scrollbar py-1 px-0.5 flex items-center gap-2">
-        {/* "All Places" Filter Chip */}
+    <div className="w-full flex flex-col gap-2 pt-1 select-none">
+      {/* 4 Primary Structured Filter Cards (2x2 Grid) */}
+      <div className="grid grid-cols-2 gap-2 w-full">
+        {/* 1. All Places Tab */}
         <button
-          onClick={() => {
-            setSelectedCategoryId(null);
-            setSelectedFloor(null);
-          }}
-          className={`touch-target px-3.5 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all flex items-center gap-2 backdrop-blur-md shadow-sm active:scale-95 ${
+          type="button"
+          onClick={() => setSelectedCategoryId(null)}
+          className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between border ${
             selectedCategoryId === null
-              ? 'bg-brand-indigo text-white shadow-brand-indigo/30 shadow-md ring-2 ring-brand-indigo/30'
-              : 'bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-700'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-sm'
+              : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 border-slate-200/80 dark:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-700'
           }`}
         >
-          <Layers size={14} />
-          <span>All Places</span>
+          <div className="flex items-center gap-2 min-w-0">
+            <Layers size={14} className="shrink-0" />
+            <span className="truncate">All Places</span>
+          </div>
           <span
-            className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+            className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold shrink-0 ${
               selectedCategoryId === null
-                ? 'bg-white/20 text-white'
+                ? 'bg-white/20 text-white dark:bg-slate-900/20 dark:text-slate-900'
                 : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
             }`}
           >
@@ -82,93 +75,197 @@ export const CategoryChips: React.FC = () => {
           </span>
         </button>
 
-        {/* Categories Chips */}
-        {visibleCategories.map((cat) => {
-          const isSelected = selectedCategoryId === cat.id;
-          const isDept = cat.id === 2 || cat.slug === 'departments';
-          const IconComponent = isDept ? Building2 : getCategoryIconComponent(cat.icon);
-          const count = categoryCounts[cat.id] ?? 0;
+        {/* 2. Departments Tab */}
+        <button
+          type="button"
+          onClick={() => setSelectedCategoryId(isDepartmentsSelected ? null : 2)}
+          className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between border ${
+            isDepartmentsSelected
+              ? 'bg-purple-600 text-white border-purple-600 shadow-sm ring-2 ring-purple-400/30'
+              : 'bg-purple-50/90 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800/80 hover:bg-purple-100 dark:hover:bg-purple-900/60'
+          }`}
+        >
+          <div className="flex items-center gap-1.5 min-w-0">
+            <Building2 size={14} className="shrink-0" />
+            <span className="truncate">Departments</span>
+            {!isDepartmentsSelected && <Sparkles size={11} className="text-amber-500 shrink-0" />}
+          </div>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold shrink-0 ${
+              isDepartmentsSelected
+                ? 'bg-white/25 text-white'
+                : 'bg-purple-200/80 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
+            }`}
+          >
+            {categoryCounts[2] ?? deptCategory?.location_count ?? 4}
+          </span>
+        </button>
 
-          return (
-            <button
-              key={cat.id}
-              onClick={() => {
-                if (isSelected) {
-                  setSelectedCategoryId(null);
-                  setSelectedFloor(null);
-                } else {
-                  setSelectedCategoryId(cat.id);
-                  setSelectedFloor(null);
-                }
-              }}
-              className={`touch-target px-3.5 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all flex items-center gap-2 backdrop-blur-md shadow-sm active:scale-95 ${
-                isSelected
-                  ? 'text-white shadow-md ring-2'
-                  : isDept
-                  ? 'bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/40 dark:to-indigo-950/40 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-800 font-bold hover:shadow'
-                  : 'bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-700'
-              }`}
-              style={{
-                backgroundColor: isSelected ? cat.color : undefined,
-                borderColor: isSelected ? cat.color : undefined,
-              }}
-            >
-              <IconComponent size={14} className={isDept && !isSelected ? 'text-purple-600 dark:text-purple-400' : ''} />
-              <span>{cat.name}</span>
-              {isDept && !isSelected && <Sparkles size={11} className="text-amber-500 animate-pulse" />}
-              <span
-                className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                  isSelected
-                    ? 'bg-white/25 text-white'
-                    : isDept
-                    ? 'bg-purple-200/80 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200'
-                    : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                }`}
-              >
-                {count}
-              </span>
-            </button>
-          );
-        })}
+        {/* 3. Laboratories Tab */}
+        <button
+          type="button"
+          onClick={() => setSelectedCategoryId(selectedCategoryId === 3 ? null : 3)}
+          className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between border ${
+            selectedCategoryId === 3
+              ? 'bg-cyan-600 text-white border-cyan-600 shadow-sm ring-2 ring-cyan-400/30'
+              : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 border-slate-200/80 dark:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-700'
+          }`}
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <FlaskConical size={14} className="text-cyan-600 dark:text-cyan-400 shrink-0" />
+            <span className="truncate">Laboratories</span>
+          </div>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold shrink-0 ${
+              selectedCategoryId === 3
+                ? 'bg-white/25 text-white'
+                : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+            }`}
+          >
+            {categoryCounts[3] ?? labCategory?.location_count ?? 1}
+          </span>
+        </button>
+
+        {/* 4. Administration Tab */}
+        <button
+          type="button"
+          onClick={() => setSelectedCategoryId(selectedCategoryId === 4 ? null : 4)}
+          className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between border ${
+            selectedCategoryId === 4
+              ? 'bg-slate-600 text-white border-slate-600 shadow-sm ring-2 ring-slate-400/30'
+              : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 border-slate-200/80 dark:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-700'
+          }`}
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <Landmark size={14} className="text-slate-500 shrink-0" />
+            <span className="truncate">Administration</span>
+          </div>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold shrink-0 ${
+              selectedCategoryId === 4
+                ? 'bg-white/25 text-white'
+                : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+            }`}
+          >
+            {categoryCounts[4] ?? adminCategory?.location_count ?? 2}
+          </span>
+        </button>
       </div>
 
-      {/* Dedicated Departments Quick Directory & Floor Strip when Departments is active or filtered */}
-      {isDepartmentsActive && (
-        <div className="w-full flex flex-col gap-1.5 p-2 rounded-2xl bg-purple-50/70 dark:bg-purple-950/30 border border-purple-200/80 dark:border-purple-800/60 animate-fadeIn">
-          <div className="flex items-center justify-between px-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300 flex items-center gap-1">
-              <Building2 size={12} />
-              Department Floor Directory
+      {/* Secondary / Campus Facilities Row (Collapsible or compact pills) */}
+      <div className="w-full flex flex-col gap-1.5">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+            Campus Facilities
+          </span>
+          {secondaryCategories.length > 2 && (
+            <button
+              type="button"
+              onClick={() => setShowMoreFilters(!showMoreFilters)}
+              className="text-[10px] text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-0.5"
+            >
+              <span>{showMoreFilters ? 'Show less' : `+${secondaryCategories.length} more`}</span>
+              {showMoreFilters ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
+            </button>
+          )}
+        </div>
+
+        {/* Clean Wrap Layout for Secondary Categories (No horizontal cutoff!) */}
+        <div className="flex flex-wrap gap-1.5">
+          {secondaryCategories.slice(0, showMoreFilters ? undefined : 3).map((cat) => {
+            const isSelected = selectedCategoryId === cat.id;
+            const IconComponent = getCategoryIconComponent(cat.icon);
+            const count = categoryCounts[cat.id] ?? 0;
+
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategoryId(isSelected ? null : cat.id)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 border ${
+                  isSelected
+                    ? 'text-white border-transparent shadow-sm'
+                    : 'bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200/80 dark:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-700'
+                }`}
+                style={{
+                  backgroundColor: isSelected ? cat.color : undefined,
+                }}
+              >
+                <IconComponent size={12} />
+                <span>{cat.name}</span>
+                <span
+                  className={`px-1 py-0.1 rounded text-[10px] font-bold ${
+                    isSelected ? 'bg-white/25 text-white' : 'text-slate-400'
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Dedicated Department Floor Directory (Displayed when Departments filter is selected) */}
+      {isDepartmentsSelected && (
+        <div className="w-full flex flex-col gap-2 p-3 rounded-2xl bg-purple-50/90 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/70 shadow-sm animate-fadeIn">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-purple-900 dark:text-purple-200 flex items-center gap-1.5">
+              <Building2 size={13} className="text-purple-600" />
+              <span>Department Floor Directory</span>
             </span>
-            <span className="text-[10px] text-purple-500 dark:text-purple-400">
-              Select floor to jump
+            <span className="text-[10px] text-purple-600 dark:text-purple-300 font-medium">
+              Click to view details
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-            {departmentLocations.map((dept) => {
-              const isLocSelected = selectedLocation?.id === dept.id;
-              // Extract floor tag from facilities or name
-              const floorTag = dept.facilities?.find((f) => f.includes('Floor')) || 'Dept';
+          {/* Fully visible vertical cards for every department & floor */}
+          <div className="flex flex-col gap-1.5">
+            {departmentLocations.map((loc) => {
+              const floorTag = loc.facilities.find((f) => f.includes('Floor')) || 'Dept';
+              const isLocActive = selectedLocation?.id === loc.id;
+              const buildingLabel =
+                loc.entrance_node_id === 4 ? 'Department Section' : 'Administrative Block';
 
               return (
                 <button
-                  key={dept.id}
-                  onClick={() => handleSelectDept(dept)}
-                  className={`touch-target px-2.5 py-1 rounded-lg text-xs font-medium shrink-0 transition-all flex items-center gap-1.5 border ${
-                    isLocSelected
+                  key={loc.id}
+                  type="button"
+                  onClick={() => setSelectedLocation(loc)}
+                  className={`w-full p-2.5 rounded-xl text-left transition-all flex items-center justify-between border ${
+                    isLocActive
                       ? 'bg-purple-600 text-white border-purple-600 shadow-sm'
-                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-purple-200 dark:border-purple-900/60 hover:bg-purple-100/60 dark:hover:bg-purple-900/40'
+                      : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-purple-100 dark:border-purple-900/60 hover:bg-purple-100/60 dark:hover:bg-purple-900/50'
                   }`}
-                  title={`${dept.name} (${floorTag})`}
                 >
-                  <span className="font-bold text-[10px] px-1 py-0.2 rounded bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
-                    {floorTag}
-                  </span>
-                  <span className="truncate max-w-[130px]">
-                    {dept.name.split('(')[0].trim().replace('Department', 'Dept')}
-                  </span>
-                  <ChevronRight size={11} className="opacity-60" />
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
+                        isLocActive
+                          ? 'bg-white/25 text-white'
+                          : 'bg-purple-100 dark:bg-purple-900/80 text-purple-800 dark:text-purple-200'
+                      }`}
+                    >
+                      {floorTag}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold truncate leading-tight">
+                        {loc.name.split('(')[0].trim()}
+                      </p>
+                      <p
+                        className={`text-[10px] truncate mt-0.5 ${
+                          isLocActive ? 'text-white/80' : 'text-slate-400'
+                        }`}
+                      >
+                        {buildingLabel}
+                      </p>
+                    </div>
+                  </div>
+
+                  <MapPin
+                    size={14}
+                    className={`shrink-0 ml-2 ${isLocActive ? 'text-white' : 'text-purple-400'}`}
+                  />
                 </button>
               );
             })}
