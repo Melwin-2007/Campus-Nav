@@ -1,0 +1,26 @@
+services:
+  # ==============================================================================
+  # Option 1: Full-Stack Web Service (Single Free-Tier Service with Mounted SPA)
+  # ==============================================================================
+  - type: web
+    name: campus-navigator
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: ENVIRONMENT
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///./campus_navigator.db
+      - key: BACKEND_CORS_ORIGINS
+        value: '["*"]'
+      - key: ADMIN_DEFAULT_USERNAME
+        value: admin
+      - key: ADMIN_DEFAULT_PASSWORD
+        value: admin123

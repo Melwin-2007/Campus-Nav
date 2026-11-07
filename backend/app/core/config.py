@@ -29,7 +29,8 @@ class Settings(BaseSettings):
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
-        "http://localhost:8000"
+        "http://localhost:8000",
+        "https://*.onrender.com"
     ]
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
@@ -50,6 +51,14 @@ class Settings(BaseSettings):
     # Database Connection
     DATABASE_URL: str = "sqlite:///./campus_navigator.db"
     DB_ECHO: bool = False
+
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def assemble_database_url(cls, v: str) -> str:
+        """Adapts Render postgres:// scheme to SQLAlchemy 2 compatible postgresql:// scheme."""
+        if isinstance(v, str) and v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql://", 1)
+        return v
 
     # Security & Authentication
     SECRET_KEY: str = "campus-navigator-super-secret-key-change-in-production-2026"

@@ -60,9 +60,24 @@ Open `http://localhost:5173` in your browser.
 
 ---
 
+## ☁️ Deploying to Render
+
+This project is pre-configured for automated one-click deployment on [Render](https://render.com).
+
+### Quick Deploy via Render Blueprint
+1. Push this repository to **GitHub** or **GitLab**.
+2. Log in to [dashboard.render.com](https://dashboard.render.com) and click **New +** > **Blueprint**.
+3. Select your repository. Render automatically reads [`render.yaml`](file:///e:/Campus-Nav/render.yaml) and executes [`build.sh`](file:///e:/Campus-Nav/build.sh), building both the React SPA and FastAPI backend into a single Web Service.
+4. Click **Apply**. Your app will be live at `https://campus-navigator.onrender.com`.
+
+For custom domains, persistent disks, and decoupled frontend/backend deployment instructions, refer to the [**Render Deployment Guide**](file:///e:/Campus-Nav/docs/RENDER_DEPLOYMENT.md).
+
+---
+
 ## 📚 Documentation Suite
 
 Comprehensive project documentation is available in the [`docs/`](file:///e:/Campus-Nav/docs) directory:
+- [**Render Deployment Guide**](file:///e:/Campus-Nav/docs/RENDER_DEPLOYMENT.md): Step-by-step instructions for deploying to Render (Blueprint, Unified Service, or Decoupled).
 - [**User Guide**](file:///e:/Campus-Nav/docs/USER_GUIDE.md): Plain-English guide for finding places, directions, accessible routing, GPS tracking, and QR codes.
 - [**Administrator Guide**](file:///e:/Campus-Nav/docs/ADMIN_GUIDE.md): How to use the Visual Map Graph Editor, manage locations, upload photos, and print QR posters.
 - [**REST API Documentation**](file:///e:/Campus-Nav/docs/API_DOCUMENTATION.md): Complete catalog of public and admin API endpoints with request/response schemas.
