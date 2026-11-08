@@ -117,6 +117,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onOpenScanner }) => {
       setSelectedLocation(loc);
       setIsOpen(false);
       setQuery('');
+      inputRef.current?.blur();
     },
     [saveRecent, setSelectedLocation]
   );
@@ -209,7 +210,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onOpenScanner }) => {
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search departments, labs, buildings..."
-          className="w-full bg-transparent px-3 py-1 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
+          className="w-full bg-transparent px-3 py-1 text-base md:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
         />
 
         {/* Clear query button */}

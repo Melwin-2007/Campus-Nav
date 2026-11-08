@@ -75,7 +75,7 @@ export const LocationDetail: React.FC<LocationDetailProps> = ({ location, onClos
   return (
     <div className="w-full flex flex-col overflow-y-auto no-scrollbar">
       {/* Hero Media Container with Image or Category Fallback */}
-      <div className="relative w-full h-48 sm:h-56 rounded-t-2xl sm:rounded-2xl overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800">
+      <div className="relative w-full h-40 sm:h-52 rounded-2xl overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800">
         {location.photo_url && !imageError ? (
           <img
             src={location.photo_url}
@@ -304,22 +304,22 @@ export const LocationDetail: React.FC<LocationDetailProps> = ({ location, onClos
         )}
 
         {/* Action CTAs: Directions and Directions From Here */}
-        <div className="flex flex-col sm:flex-row gap-2.5 mt-2">
+        <div className="flex flex-row gap-2 mt-1 pb-2 sm:pb-0">
           {/* Primary Action: Directions To */}
           <button
             onClick={() => startDirectionsTo(location)}
-            className="flex-1 touch-target py-3 px-4 rounded-xl font-heading font-semibold text-sm bg-brand-indigo hover:bg-brand-indigo-hover text-white shadow-lg shadow-brand-indigo/25 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+            className="flex-1 touch-target min-h-[46px] py-2.5 px-3 rounded-xl font-heading font-semibold text-xs sm:text-sm bg-brand-indigo hover:bg-brand-indigo-hover text-white shadow-lg shadow-brand-indigo/25 flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]"
           >
-            <Navigation size={18} />
+            <Navigation size={17} />
             <span>Directions</span>
           </button>
 
           {/* Secondary Action: Directions From Here */}
           <button
             onClick={() => startDirectionsFrom(location)}
-            className="flex-1 touch-target py-3 px-4 rounded-xl font-heading font-semibold text-sm bg-brand-teal hover:bg-brand-teal-hover text-white shadow-md shadow-brand-teal/20 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+            className="flex-1 touch-target min-h-[46px] py-2.5 px-3 rounded-xl font-heading font-semibold text-xs sm:text-sm bg-brand-teal hover:bg-brand-teal-hover text-white shadow-md shadow-brand-teal/20 flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]"
           >
-            <MapPin size={18} />
+            <MapPin size={17} />
             <span>From Here</span>
           </button>
         </div>

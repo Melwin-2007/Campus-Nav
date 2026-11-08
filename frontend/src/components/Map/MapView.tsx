@@ -244,8 +244,8 @@ export const MapView: React.FC = () => {
         {isAdminMode && <GraphEditor />}
       </MapContainer>
 
-      {/* Floating Glassmorphic Map Control Buttons (Top-Right) */}
-      <div className="absolute top-4 right-4 z-[900] flex flex-col gap-2">
+      {/* Floating Glassmorphic Map Control Buttons (Ergonomic bottom-right above peek sheet on mobile, top-right on desktop) */}
+      <div className="absolute bottom-36 md:bottom-auto md:top-4 right-3 md:right-4 z-[900] flex flex-col gap-2">
         {/* Admin Graph Editor Toggle */}
         <button
           onClick={() => {
