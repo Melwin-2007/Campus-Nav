@@ -24,7 +24,6 @@ export const CategoryChips: React.FC = () => {
   } = useNavigation();
 
   const [showMoreFilters, setShowMoreFilters] = useState<boolean>(false);
-  const [selectedFloor, setSelectedFloor] = useState<string>('ALL');
 
   // Compute live location count per category
   const categoryCounts = useMemo(() => {
@@ -72,36 +71,6 @@ export const CategoryChips: React.FC = () => {
         return (categoryCounts[b.id] || 0) - (categoryCounts[a.id] || 0);
       });
   }, [categories, categoryCounts]);
-
-  // All Academic Departments & Laboratories for the dedicated directory, ordered hierarchically by floor
-  const departmentLocations = useMemo(() => {
-    const floorRank: Record<string, number> = {
-      'Ground Floor': 0,
-      '1st Floor': 1,
-      '2nd Floor': 2,
-      '3rd Floor': 3,
-      '4th Floor': 4,
-    };
-
-    return locations
-      .filter((loc) => loc.category_id === 2 || loc.category_id === 3)
-      .sort((a, b) => {
-        const floorA = a.facilities.find((f) => f.includes('Floor')) || '';
-        const floorB = b.facilities.find((f) => f.includes('Floor')) || '';
-        const rankA = floorRank[floorA] ?? 99;
-        const rankB = floorRank[floorB] ?? 99;
-        if (rankA !== rankB) return rankA - rankB;
-        return a.name.localeCompare(b.name);
-      });
-  }, [locations]);
-
-  // Filtered by selected floor pill
-  const filteredDepartmentLocations = useMemo(() => {
-    if (selectedFloor === 'ALL') return departmentLocations;
-    return departmentLocations.filter((loc) =>
-      loc.facilities.some((f) => f.toLowerCase().includes(selectedFloor.toLowerCase()))
-    );
-  }, [departmentLocations, selectedFloor]);
 
   const isDepartmentsSelected = selectedCategoryId === 2;
 
@@ -340,101 +309,6 @@ export const CategoryChips: React.FC = () => {
             })}
           </div>
         </div>
-
-        {/* Dedicated Department Floor Directory (Desktop Only) */}
-        {isDepartmentsSelected && (
-          <div className="w-full flex flex-col gap-2 p-3 rounded-2xl bg-purple-50/90 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/70 shadow-sm animate-fadeIn">
-            {/* Directory Header with count badge */}
-            <div className="flex items-center justify-between shrink-0">
-              <span className="text-xs font-bold text-purple-900 dark:text-purple-200 flex items-center gap-1.5">
-                <Building2 size={13} className="text-purple-600 dark:text-purple-400" />
-                <span>Department Floor Directory</span>
-              </span>
-              <span className="text-[10px] text-purple-700 dark:text-purple-300 font-semibold bg-purple-200/70 dark:bg-purple-900/70 px-2 py-0.5 rounded-full">
-                {filteredDepartmentLocations.length} Places • Scroll
-              </span>
-            </div>
-
-            {/* Quick Floor Filter Pills */}
-            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5 shrink-0">
-              {[
-                { id: 'ALL', label: 'All Floors' },
-                { id: 'Ground Floor', label: 'Ground' },
-                { id: '1st Floor', label: '1st Floor' },
-                { id: '2nd Floor', label: '2nd Floor' },
-                { id: '4th Floor', label: '4th Floor' },
-              ].map((item) => {
-                const isActive = selectedFloor === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setSelectedFloor(item.id)}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold transition-all shrink-0 ${
-                      isActive
-                        ? 'bg-purple-600 text-white shadow-sm ring-1 ring-purple-400'
-                        : 'bg-white/90 dark:bg-slate-800/80 text-purple-700 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/60 hover:bg-purple-100/60'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Scrollable Department Floor Cards List with Custom Purple Scrollbar */}
-            <div className="flex flex-col gap-1.5 max-h-[240px] lg:max-h-[290px] xl:max-h-[340px] overflow-y-auto overscroll-contain pr-1 custom-scrollbar -webkit-overflow-scrolling-touch">
-              {filteredDepartmentLocations.map((loc) => {
-                const floorTag = loc.facilities.find((f) => f.includes('Floor')) || 'Dept';
-                const isLocActive = selectedLocation?.id === loc.id;
-                const buildingLabel =
-                  loc.entrance_node_id === 4 ? 'Department Section' : 'Administrative Block';
-
-                return (
-                  <button
-                    key={loc.id}
-                    type="button"
-                    onClick={() => setSelectedLocation(loc)}
-                    className={`w-full p-2.5 rounded-xl text-left transition-all flex items-center justify-between border shrink-0 ${
-                      isLocActive
-                        ? 'bg-purple-600 text-white border-purple-600 shadow-sm'
-                        : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-purple-100 dark:border-purple-900/60 hover:bg-purple-100/60 dark:hover:bg-purple-900/50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
-                          isLocActive
-                            ? 'bg-white/25 text-white'
-                            : 'bg-purple-100 dark:bg-purple-900/80 text-purple-800 dark:text-purple-200'
-                        }`}
-                      >
-                        {floorTag}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-xs font-semibold truncate leading-tight">
-                          {loc.name.split('(')[0].trim()}
-                        </p>
-                        <p
-                          className={`text-[10px] truncate mt-0.5 ${
-                            isLocActive ? 'text-white/80' : 'text-slate-400'
-                          }`}
-                        >
-                          {buildingLabel}
-                        </p>
-                      </div>
-                    </div>
-
-                    <MapPin
-                      size={14}
-                      className={`shrink-0 ml-2 ${isLocActive ? 'text-white' : 'text-purple-400'}`}
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

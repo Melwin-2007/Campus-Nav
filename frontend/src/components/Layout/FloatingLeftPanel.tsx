@@ -25,10 +25,28 @@ export const FloatingLeftPanel: React.FC = () => {
     return categories.find((c) => c.id === selectedCategoryId) || null;
   }, [selectedCategoryId, categories]);
 
-  // Filtered locations based on category chip
+  // Filtered locations based on category chip (hierarchically sorted by floor for departments)
   const displayedLocations = useMemo(() => {
     if (!selectedCategoryId) return locations;
-    return locations.filter((loc) => loc.category_id === selectedCategoryId);
+    const filtered = locations.filter((loc) => loc.category_id === selectedCategoryId);
+    if (selectedCategoryId === 2) {
+      const floorRank: Record<string, number> = {
+        'Ground Floor': 0,
+        '1st Floor': 1,
+        '2nd Floor': 2,
+        '3rd Floor': 3,
+        '4th Floor': 4,
+      };
+      return [...filtered].sort((a, b) => {
+        const floorA = a.facilities?.find((f) => f.includes('Floor')) || '';
+        const floorB = b.facilities?.find((f) => f.includes('Floor')) || '';
+        const rankA = floorRank[floorA] ?? 99;
+        const rankB = floorRank[floorB] ?? 99;
+        if (rankA !== rankB) return rankA - rankB;
+        return a.name.localeCompare(b.name);
+      });
+    }
+    return filtered;
   }, [locations, selectedCategoryId]);
 
   return (
