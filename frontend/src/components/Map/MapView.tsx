@@ -113,6 +113,7 @@ export const MapView: React.FC = () => {
     userLocation,
     activeRoute,
     activeStepIndex,
+    isDirectionsMode,
     isAdminMode,
     setIsAdminMode,
     setIsAdminLoginOpen,
@@ -244,10 +245,54 @@ export const MapView: React.FC = () => {
         {isAdminMode && <GraphEditor />}
       </MapContainer>
 
-      {/* Floating Glassmorphic Map Control Buttons (Ergonomic bottom-right above peek sheet on mobile, top-right on desktop) */}
-      <div className="absolute bottom-36 md:bottom-auto md:top-4 right-3 md:right-4 z-[900] flex flex-col gap-2">
-        {/* Admin Graph Editor Toggle */}
+      {/* Floating Glassmorphic Map Control Buttons (Top-right adaptive dock: clear of bottom sheets on mobile, top-right on desktop) */}
+      <div
+        className={`fixed md:absolute right-3 md:right-4 z-20 flex flex-col gap-1.5 transition-all duration-300 ${
+          isDirectionsMode || activeRoute || selectedLocation
+            ? 'top-[4.75rem] md:top-4'
+            : 'top-[7.5rem] md:top-4'
+        }`}
+      >
+        {/* 1. My Location / GPS */}
         <button
+          type="button"
+          onClick={handleLocateMe}
+          className="w-9 h-9 md:w-10 md:h-10 rounded-2xl glass-panel flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-brand-teal dark:hover:text-brand-teal hover:border-brand-teal transition-all active:scale-90 shadow-sm"
+          title="Find My Location"
+          aria-label="Find My Location"
+        >
+          <Navigation size={17} className="md:w-[19px] md:h-[19px]" />
+        </button>
+
+        {/* 2. Reset Campus View */}
+        <button
+          type="button"
+          onClick={handleResetCampusView}
+          className="w-9 h-9 md:w-10 md:h-10 rounded-2xl glass-panel flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-brand-indigo dark:hover:text-brand-teal transition-all active:scale-90 shadow-sm"
+          title="Reset Campus View"
+          aria-label="Reset Campus View"
+        >
+          <Compass size={17} className="md:w-[19px] md:h-[19px]" />
+        </button>
+
+        {/* 3. Theme Toggle */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="w-9 h-9 md:w-10 md:h-10 rounded-2xl glass-panel flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-amber-500 transition-all active:scale-90 shadow-sm"
+          title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          aria-label="Toggle Theme"
+        >
+          {isDark ? (
+            <Sun size={17} className="text-amber-400 md:w-[19px] md:h-[19px]" />
+          ) : (
+            <Moon size={17} className="text-indigo-600 md:w-[19px] md:h-[19px]" />
+          )}
+        </button>
+
+        {/* 4. Admin Graph Editor Toggle */}
+        <button
+          type="button"
           onClick={() => {
             if (api.auth.isAuthenticated()) {
               setIsAdminMode(!isAdminMode);
@@ -255,45 +300,15 @@ export const MapView: React.FC = () => {
               setIsAdminLoginOpen(true);
             }
           }}
-          className={`touch-target p-2.5 rounded-xl glass-panel transition-all active:scale-95 ${
+          className={`w-9 h-9 md:w-10 md:h-10 rounded-2xl glass-panel flex items-center justify-center transition-all active:scale-90 shadow-sm ${
             isAdminMode
-              ? 'bg-amber-500 text-white shadow-md'
+              ? 'bg-amber-500 text-white shadow-md border-amber-500'
               : 'text-slate-700 dark:text-slate-200 hover:text-brand-indigo dark:hover:text-brand-teal'
           }`}
-          title={isAdminMode ? 'Exit Graph Editor' : 'Admin Graph Editor'}
-          aria-label="Admin Graph Editor"
+          title={isAdminMode ? 'Exit Graph Editor' : 'Admin Portal & Graph Editor'}
+          aria-label="Admin Portal & Graph Editor"
         >
-          <Layers size={20} />
-        </button>
-
-        {/* Reset View */}
-        <button
-          onClick={handleResetCampusView}
-          className="touch-target p-2.5 rounded-xl glass-panel text-slate-700 dark:text-slate-200 hover:text-brand-indigo dark:hover:text-brand-teal transition-all active:scale-95"
-          title="Reset Campus View"
-          aria-label="Reset Campus View"
-        >
-          <Compass size={20} />
-        </button>
-
-        {/* My Location */}
-        <button
-          onClick={handleLocateMe}
-          className="touch-target p-2.5 rounded-xl glass-panel text-slate-700 dark:text-slate-200 hover:text-brand-teal transition-all active:scale-95"
-          title="My Location"
-          aria-label="Find My Location"
-        >
-          <Navigation size={20} />
-        </button>
-
-        {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          className="touch-target p-2.5 rounded-xl glass-panel text-slate-700 dark:text-slate-200 hover:text-brand-amber transition-all active:scale-95"
-          title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          aria-label="Toggle Theme"
-        >
-          {isDark ? <Sun size={20} className="text-amber-400" /> : <Moon size={20} className="text-indigo-600" />}
+          <Layers size={17} className="md:w-[19px] md:h-[19px]" />
         </button>
       </div>
     </div>
