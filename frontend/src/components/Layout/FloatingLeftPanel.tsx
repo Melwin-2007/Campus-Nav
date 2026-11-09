@@ -58,8 +58,8 @@ export const FloatingLeftPanel: React.FC = () => {
       </div>
 
       {/* Persistent Search and Category Filtering Section */}
-      <div className="p-4 pb-2 flex flex-col gap-2 shrink-0 border-b border-slate-100 dark:border-slate-800/60">
-        <div className="flex items-center gap-2">
+      <div className="p-4 pb-2 flex flex-col gap-2 shrink-0 border-b border-slate-100 dark:border-slate-800/60 max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar">
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex-1 min-w-0">
             <SearchBar />
           </div>
@@ -81,7 +81,7 @@ export const FloatingLeftPanel: React.FC = () => {
       </div>
 
       {/* Main Dynamic Panel Body */}
-      <div className="flex-1 overflow-y-auto no-scrollbar p-4 flex flex-col">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 flex flex-col">
         {/* State A: Directions View */}
         {isDirectionsMode || activeRoute ? (
           <DirectionsPanel />
