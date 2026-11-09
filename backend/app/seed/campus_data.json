@@ -551,6 +551,50 @@
       ],
       "photo_url": "/images/pavilion.jpeg",
       "is_active": true
+    },
+    {
+      "id": 13,
+      "category_id": 2,
+      "name": "Mechanical Engineering Department (Ground Floor)",
+      "description": "Department of Mechanical Engineering located on the Ground Floor of the Department Section. Advanced prototyping facilities, manufacturing workshops, thermal engineering labs, and modern design studios.",
+      "department": "Mechanical Engineering Department",
+      "latitude": 15.88124,
+      "longitude": 74.51833,
+      "entrance_node_id": 4,
+      "opening_hours": "08:00 - 17:30",
+      "facilities": [
+        "Ground Floor",
+        "Thermal Engineering Lab",
+        "Workshop & Machine Shop",
+        "CAD/CAM Center",
+        "Fluid Mechanics Lab",
+        "Smart Classrooms",
+        "Wi-Fi"
+      ],
+      "photo_url": "/images/mechanical_dept.jpeg",
+      "is_active": true
+    },
+    {
+      "id": 14,
+      "category_id": 2,
+      "name": "Electrical & Electronics Engineering Department (1st Floor)",
+      "description": "Department of Electrical & Electronics Engineering (EEE / ECE) located on the 1st Floor of the Department Section. Equipped with power systems laboratories, embedded systems research hubs, circuits simulation center, and smart classrooms.",
+      "department": "Electrical & Electronics Engineering Department",
+      "latitude": 15.88136,
+      "longitude": 74.51834,
+      "entrance_node_id": 4,
+      "opening_hours": "08:00 - 17:30",
+      "facilities": [
+        "1st Floor",
+        "Power Electronics Lab",
+        "Microcontroller & Embedded Systems Lab",
+        "Electrical Machines Lab",
+        "Circuits Simulation Hub",
+        "Smart Classrooms",
+        "Wi-Fi"
+      ],
+      "photo_url": "/images/ec_department.jpeg",
+      "is_active": true
     }
   ]
 }
