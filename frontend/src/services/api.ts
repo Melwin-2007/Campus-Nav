@@ -139,14 +139,6 @@ export const api = {
     },
   },
 
-  // QR Codes
-  qr: {
-    resolve: async (identifier: string): Promise<Location> => {
-      const response = await apiClient.get<Location>(`/qr/${identifier}`);
-      return response.data;
-    },
-  },
-
   // Path Nodes
   nodes: {
     getAll: async (): Promise<PathNode[]> => {

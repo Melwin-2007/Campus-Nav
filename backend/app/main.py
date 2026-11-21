@@ -11,7 +11,6 @@ from app.api.admin import router as admin_router
 from app.api.categories import router as categories_router
 from app.api.health import router as health_router
 from app.api.locations import router as locations_router
-from app.api.qr import router as qr_router
 from app.api.routes import router as routes_router
 from app.core.config import settings
 from app.db.base_class import Base
@@ -97,7 +96,6 @@ app.include_router(health_router, prefix=settings.API_PREFIX)
 app.include_router(routes_router, prefix=settings.API_PREFIX)
 app.include_router(categories_router, prefix=settings.API_PREFIX)
 app.include_router(locations_router, prefix=settings.API_PREFIX)
-app.include_router(qr_router, prefix=settings.API_PREFIX)
 app.include_router(admin_router, prefix=settings.API_PREFIX)
 
 

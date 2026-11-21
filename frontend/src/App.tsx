@@ -9,12 +9,10 @@ import { CategoryChips } from './components/Categories/CategoryChips';
 import { LocationDetail } from './components/Location/LocationDetail';
 import { DirectionsPanel } from './components/Directions/DirectionsPanel';
 import { AdminLoginModal } from './components/Admin/AdminLoginModal';
-import { QRScannerModal } from './components/Scanner/QRScannerModal';
 import { OffCampusBanner } from './components/Common/OffCampusBanner';
 import {
   MapPin,
   Compass,
-  QrCode,
   Footprints,
   X,
   Navigation as NavIcon,
@@ -31,8 +29,6 @@ const MainLayout: React.FC = () => {
     setIsDirectionsMode,
     isAdminLoginOpen,
     setIsAdminLoginOpen,
-    isScannerOpen,
-    setIsScannerOpen,
     setBottomSheetSnap,
     bottomSheetSnap,
     setFlyToTarget,
@@ -55,7 +51,7 @@ const MainLayout: React.FC = () => {
       {/* 3. Mobile Top Floating Header (<768px) */}
       <div className="md:hidden fixed top-3 inset-x-3 z-30 flex flex-col gap-1.5 pointer-events-none">
         <div className="pointer-events-auto">
-          <SearchBar onOpenScanner={() => setIsScannerOpen(true)} />
+          <SearchBar />
         </div>
         {!selectedLocation && !isDirectionsMode && !activeRoute && (
           <div className="pointer-events-auto">
@@ -214,22 +210,9 @@ const MainLayout: React.FC = () => {
           <NavIcon size={18} />
           <span className="text-[10px]">Directions</span>
         </button>
-
-        {/* Tab 4: QR Scanner */}
-        <button
-          type="button"
-          onClick={() => setIsScannerOpen(true)}
-          className="flex-1 touch-target flex flex-col items-center justify-center gap-0.5 text-brand-indigo dark:text-brand-teal hover:opacity-80 transition-opacity"
-        >
-          <QrCode size={18} />
-          <span className="text-[10px] font-bold">Scan QR</span>
-        </button>
       </nav>
 
-      {/* 6. In-Browser Native QR Code Scanner Modal */}
-      <QRScannerModal isOpen={isScannerOpen} onClose={() => setIsScannerOpen(false)} />
-
-      {/* 7. Admin Authentication & Graph Editor Modal */}
+      {/* Admin Authentication & Graph Editor Modal */}
       <AdminLoginModal
         isOpen={isAdminLoginOpen}
         onClose={() => setIsAdminLoginOpen(false)}

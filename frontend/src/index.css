@@ -245,25 +245,6 @@
   border-bottom: 1px solid #334155 !important;
 }
 
-/* QR Scanner Laser Animation */
-@keyframes laser-sweep {
-  0% {
-    top: 5%;
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    top: 92%;
-    opacity: 0.4;
-  }
-}
-
-.scanner-laser {
-  animation: laser-sweep 2.2s ease-in-out infinite alternate;
-}
-
 /* Animated Route Flowing Dash */
 .leaflet-route-flow {
   stroke-dasharray: 8, 16;

@@ -36,7 +36,6 @@ interface NavigationContextValue {
   isAdminMode: boolean;
   isAdminLoginOpen: boolean;
   bottomSheetSnap: BottomSheetSnap;
-  isScannerOpen: boolean;
   flyToTarget: { lat: number; lon: number; zoom?: number } | null;
 
   // Actions
@@ -58,7 +57,6 @@ interface NavigationContextValue {
   setIsAdminMode: (isAdmin: boolean) => void;
   setIsAdminLoginOpen: (isOpen: boolean) => void;
   setBottomSheetSnap: (snap: BottomSheetSnap) => void;
-  setIsScannerOpen: (isOpen: boolean) => void;
   setFlyToTarget: (target: { lat: number; lon: number; zoom?: number } | null) => void;
   calculateRoute: (overrideReq?: Partial<RouteRequest>) => Promise<void>;
   calculateCurrentRoute: () => Promise<void>;
@@ -97,7 +95,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState<boolean>(false);
   const [bottomSheetSnap, setBottomSheetSnap] = useState<BottomSheetSnap>('peek');
-  const [isScannerOpen, setIsScannerOpen] = useState<boolean>(false);
   const [flyToTarget, setFlyToTarget] = useState<{ lat: number; lon: number; zoom?: number } | null>(null);
 
   // Derived legacy location references for backward compatibility
@@ -502,7 +499,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         isAdminMode,
         isAdminLoginOpen,
         bottomSheetSnap,
-        isScannerOpen,
         flyToTarget,
         setSelectedLocation,
         setSelectedCategoryId,
@@ -522,7 +518,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setIsAdminMode,
         setIsAdminLoginOpen,
         setBottomSheetSnap,
-        setIsScannerOpen,
         setFlyToTarget,
         calculateRoute,
         calculateCurrentRoute,

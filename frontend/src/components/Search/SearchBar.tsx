@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, X, Clock, QrCode, Building, ArrowRight, Building2 } from 'lucide-react';
+import { Search, X, Clock, Building, ArrowRight, Building2 } from 'lucide-react';
 import { useDebounce } from '../../hooks/useDebounce';
 import { Location, RecentSearchItem } from '../../types';
 import api from '../../services/api';
@@ -8,12 +8,8 @@ import { useNavigation } from '../../context/NavigationContext';
 const RECENT_SEARCHES_KEY = 'campus_nav_recent_searches';
 const MAX_RECENT = 5;
 
-interface SearchBarProps {
-  onOpenScanner?: () => void;
-}
-
-export const SearchBar: React.FC<SearchBarProps> = ({ onOpenScanner }) => {
-  const { setSelectedLocation, setIsScannerOpen } = useNavigation();
+export const SearchBar: React.FC = () => {
+  const { setSelectedLocation } = useNavigation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -98,7 +94,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onOpenScanner }) => {
       const updated = prev.filter((r) => r.id !== id);
       try {
         localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
-      } catch {}
+      } catch { }
       return updated;
     });
   }, []);
@@ -108,7 +104,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onOpenScanner }) => {
     setRecentSearches([]);
     try {
       localStorage.removeItem(RECENT_SEARCHES_KEY);
-    } catch {}
+    } catch { }
   }, []);
 
   const handleSelectLocation = useCallback(
@@ -227,19 +223,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onOpenScanner }) => {
             <X size={16} />
           </button>
         )}
-
-        {/* QR Scanner trigger */}
-        <button
-          onClick={() => {
-            if (onOpenScanner) onOpenScanner();
-            else setIsScannerOpen(true);
-          }}
-          className="p-1.5 text-brand-indigo dark:text-brand-teal hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all active:scale-95 shrink-0"
-          title="Scan QR Code"
-          aria-label="Scan Campus QR Code"
-        >
-          <QrCode size={18} />
-        </button>
       </div>
 
       {/* Autocomplete Dropdown List */}
@@ -255,11 +238,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onOpenScanner }) => {
                   <li
                     key={loc.id}
                     onClick={() => handleSelectLocation(loc)}
-                    className={`flex items-center justify-between p-3 cursor-pointer transition-colors ${
-                      idx === activeIndex
+                    className={`flex items-center justify-between p-3 cursor-pointer transition-colors ${idx === activeIndex
                         ? 'bg-slate-100 dark:bg-slate-800'
                         : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div
