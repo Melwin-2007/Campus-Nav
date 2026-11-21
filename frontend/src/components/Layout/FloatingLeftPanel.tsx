@@ -180,7 +180,11 @@ export const FloatingLeftPanel: React.FC = () => {
                             </span>
                           )}
                           <p className="text-[11px] text-slate-400 truncate">
-                            {loc.department || loc.category?.name}
+                            {loc.entrance_node_id === 3
+                              ? 'Administrative Block'
+                              : loc.entrance_node_id === 4
+                              ? 'Department Section'
+                              : loc.department || loc.category?.name}
                           </p>
                         </div>
                       </div>
