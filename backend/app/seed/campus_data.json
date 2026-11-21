@@ -201,6 +201,16 @@
       "node_type": "entrance",
       "is_accessible": true,
       "is_active": true
+    },
+    {
+      "id": 9,
+      "name": "Zerox Center",
+      "latitude": 15.88018,
+      "longitude": 74.51885,
+      "floor": 0,
+      "node_type": "landmark",
+      "is_accessible": true,
+      "is_active": true
     }
   ],
   "edges": [
@@ -319,6 +329,26 @@
       "from_node_id": 6,
       "to_node_id": 8,
       "distance": 44.6,
+      "edge_type": "footpath",
+      "is_accessible": true,
+      "is_bidirectional": true,
+      "is_active": true
+    },
+    {
+      "id": 14,
+      "from_node_id": 3,
+      "to_node_id": 9,
+      "distance": 23.1,
+      "edge_type": "footpath",
+      "is_accessible": true,
+      "is_bidirectional": true,
+      "is_active": true
+    },
+    {
+      "id": 15,
+      "from_node_id": 2,
+      "to_node_id": 9,
+      "distance": 52.7,
       "edge_type": "footpath",
       "is_accessible": true,
       "is_bidirectional": true,
@@ -594,6 +624,28 @@
         "Wi-Fi"
       ],
       "photo_url": "/images/ec_department.jpeg",
+      "is_active": true
+    },
+    {
+      "id": 15,
+      "category_id": 12,
+      "name": "Sri Shivabasava Xerox Centre (Zerox Center)",
+      "description": "Campus printing, photocopying, and stationery facility located adjacent to the Administrative Block. Provides project report printing, hardcover binding, spiral binding, journal binding, colour Xerox, and student stationery supplies.",
+      "department": "Student Amenities & Stationery Services",
+      "latitude": 15.88018,
+      "longitude": 74.51885,
+      "entrance_node_id": 9,
+      "opening_hours": "08:30 - 18:00",
+      "facilities": [
+        "Photocopying & Xerox",
+        "Project Print & Binding",
+        "Spiral Binding",
+        "Journal Binding",
+        "Color & B/W Printing",
+        "Stationery Supplies",
+        "Online Print Service"
+      ],
+      "photo_url": "/images/xerox_center.jpeg",
       "is_active": true
     }
   ]
