@@ -177,6 +177,14 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     refreshData();
   }, [refreshData]);
 
+  // Synchronize campusData on window for global access
+  useEffect(() => {
+    (window as any).campusData = {
+      locations,
+      categories,
+    };
+  }, [locations, categories]);
+
   // Handle setting selected location
   const setSelectedLocation = useCallback((loc: Location | null) => {
     setSelectedLocationState(loc);
